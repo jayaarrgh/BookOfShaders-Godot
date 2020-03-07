@@ -1,5 +1,7 @@
 # The Book of Shaders (Godot)
 The book of shaders examples from the glslViewer project ported to Godot by J.R. Robinson.
+[The Book of Shaders](https://thebookofshaders.com/)
+[glslViewer](https://github.com/patriciogonzalezvivo/glslViewer)
 
 ## How To
 Open the project with Godot 3.2
