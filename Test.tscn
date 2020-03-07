@@ -1,0 +1,55 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://BookOfShaders.gd" type="Script" id=1]
+[ext_resource path="res://shaders/chapter_09/dots1.shader" type="Shader" id=2]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 2 )
+
+[node name="Test" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource( 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.305882, 0.286275, 0.286275, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileDialog" type="FileDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 291.367
+margin_top = -195.474
+margin_right = 508.0
+margin_bottom = 180.526
+popup_exclusive = true
+window_title = "Open a File"
+resizable = true
+mode = 0
+current_dir = "res://shaders"
+current_path = "res://shaders/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SwitchShader" type="Button" parent="."]
+margin_left = 915.259
+margin_top = 7.69695
+margin_right = 1015.26
+margin_bottom = 27.697
+text = "Switch Shader"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
+[connection signal="pressed" from="SwitchShader" to="." method="_on_SwitchShader_pressed"]
