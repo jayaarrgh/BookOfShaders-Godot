@@ -3,6 +3,7 @@ shader_type canvas_item;
 // Author @patriciogv ( patriciogonzalezvivo.com ) - 2015
 
 const float rows = 10.0;
+uniform vec2 mouse_position;
 
 float circle(vec2 st, float radius){
   vec2 pos = vec2(0.5)-st;
@@ -27,9 +28,10 @@ void fragment(){
   ipos += vec2(floor(TIME*-8.),0.);
 
   float pct = random(ipos);
+  pct *= step(0.1+mouse_position.x/(1.0/SCREEN_PIXEL_SIZE).x,pct);
+//  pct = 1.-pct;
   pct *= circle(fpos, 0.5);
-  // pct = step(0.1+u_mouse.x/(1.0/SCREEN_PIXEL_SIZE).x,pct);
-  // pct = 1.-pct;
+
 
   COLOR = vec4(vec3(pct),1.0);
 }

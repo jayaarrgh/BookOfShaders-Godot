@@ -5,8 +5,8 @@ shader_type canvas_item;
 const float PI = 3.14159265359;
 
 mat2 scale(vec2 _scale){
-    return mat2(_scale.x,0.0,
-                0.0,_scale.y);
+    return mat2(vec2(_scale.x,0.0),
+                vec2(0.0,_scale.y));
 }
 
 float box(in vec2 _st, in vec2 _size){
@@ -20,7 +20,7 @@ float box(in vec2 _st, in vec2 _size){
     return uv.x*uv.y;
 }
 
-float cross(in vec2 _st, float _size){
+float makeCross(in vec2 _st, float _size){
     return  box(_st, vec2(_size,_size/4.)) +
             box(_st, vec2(_size/4.,_size));
 }
@@ -37,7 +37,7 @@ void fragment(){
     // color = vec3(st.x,st.y,0.0);
 
     // Add the shape on the foreground
-    color += vec3(cross(st,0.2));
+    color += vec3(makeCross(st,0.2));
 
     COLOR = vec4(color,1.0);
 }

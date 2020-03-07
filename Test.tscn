@@ -1,10 +1,12 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://BookOfShaders.gd" type="Script" id=1]
-[ext_resource path="res://shaders/chapter_09/dots1.shader" type="Shader" id=2]
+[ext_resource path="res://shaders/chapter_12/2d-voronoise.shader" type="Shader" id=2]
+[ext_resource path="res://DarkTheme.tres" type="Theme" id=3]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
+shader_param/mouse_position = null
 
 [node name="Test" type="Control"]
 anchor_right = 1.0
@@ -23,33 +25,37 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="SwitchShader" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -105.097
+margin_top = 4.16963
+margin_right = -5.09619
+margin_bottom = 26.1696
+theme = ExtResource( 3 )
+text = "Switch Shader"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="FileDialog" type="FileDialog" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = 291.367
-margin_top = -195.474
-margin_right = 508.0
-margin_bottom = 180.526
-popup_exclusive = true
-window_title = "Open a File"
-resizable = true
+visible = true
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -300.0
+margin_bottom = 304.0
+theme = ExtResource( 3 )
+window_title = "Pick A Shader"
+mode_overrides_title = false
 mode = 0
 current_dir = "res://shaders"
 current_path = "res://shaders/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="SwitchShader" type="Button" parent="."]
-margin_left = 915.259
-margin_top = 7.69695
-margin_right = 1015.26
-margin_bottom = 27.697
-text = "Switch Shader"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-[connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
 [connection signal="pressed" from="SwitchShader" to="." method="_on_SwitchShader_pressed"]
+[connection signal="confirmed" from="FileDialog" to="." method="_on_FileDialog_confirmed"]
+[connection signal="custom_action" from="FileDialog" to="." method="_on_FileDialog_custom_action"]
+[connection signal="dir_selected" from="FileDialog" to="." method="_on_FileDialog_dir_selected"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
+[connection signal="files_selected" from="FileDialog" to="." method="_on_FileDialog_files_selected"]

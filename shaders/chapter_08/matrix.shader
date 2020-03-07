@@ -43,5 +43,5 @@ void fragment(){
     vec3 color = vec3(0.0);
 
     color = matrix(st, TIME);
-    COLOR = vec4( 1.-color , 1.0);
+    COLOR = vec4( color , 1.0);
 }

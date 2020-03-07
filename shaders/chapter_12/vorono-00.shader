@@ -9,7 +9,8 @@ uniform vec2 mouse_position;
 void fragment() {
 	vec2 res = (1.0/SCREEN_PIXEL_SIZE).xy;
     vec2 st = FRAGCOORD.xy/res.xy;
-    st.x *= res.x/res.y;
+//  
+//    st.x *= res.x/res.y;
 
     vec3 color = vec3(.0);
 
@@ -19,7 +20,7 @@ void fragment() {
     point[1] = vec2(0.60,0.07);
     point[2] = vec2(0.28,0.64);
     point[3] =  vec2(0.31,0.26);
-    point[4] = mouse_position/res;
+    point[4] = vec2(mouse_position.x/res.x, 1.0+(-mouse_position.y/res.y));
 
     float m_dist = 1.;  // minimun distance
     vec2 m_point;        // minimum position
