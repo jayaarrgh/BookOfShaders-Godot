@@ -57,7 +57,7 @@ func _on_SwitchShader_pressed():
 
 func _on_CodeToggle_toggled(_button_pressed):
 	if $TextEdit.is_visible_in_tree(): $TextEdit.hide()
-	$TextEdit.show()
+	else: $TextEdit.show()
 
 func _on_Reset_pressed():
 	# overwrite user data with res version
