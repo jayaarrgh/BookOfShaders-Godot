@@ -1,4 +1,4 @@
-# The Book of Shaders (Godot)
+# The Book of Shaders - Godot
 [The Book of Shaders](https://thebookofshaders.com/) ported to [Godot](https://www.godotengine.org/) by J.R. Robinson
 
 Shout out to: [glslViewer](https://github.com/patriciogonzalezvivo/glslViewer)
