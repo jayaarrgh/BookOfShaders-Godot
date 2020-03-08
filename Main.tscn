@@ -69,30 +69,25 @@ __meta__ = {
 [node name="Reset" type="Button" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -242.505
-margin_top = 4.01591
-margin_right = -194.505
-margin_bottom = 26.0159
+margin_left = -241.921
+margin_top = 4.3079
+margin_right = -193.921
+margin_bottom = 26.3079
 theme = ExtResource( 2 )
 text = "Reset"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FileDialog" type="FileDialog" parent="."]
+[node name="NewShader" type="Button" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -297.263
-margin_right = 2.73682
-margin_bottom = 437.0
-rect_pivot_offset = Vector2( 299.856, -0.0221341 )
+margin_left = -333.808
+margin_top = 3.99564
+margin_right = -246.808
+margin_bottom = 25.9956
 theme = ExtResource( 2 )
-window_title = "Pick A Shader"
-mode_overrides_title = false
-mode = 0
-access = 1
-current_dir = "user://media/jr/Mnemonic Courier/godot/_src/bos-godot"
-current_path = "user://media/jr/Mnemonic Courier/godot/_src/bos-godot/"
+text = "New Shader"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -172,7 +167,45 @@ caret_blink = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="FileDialog" type="FileDialog" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -297.263
+margin_right = 2.73682
+margin_bottom = 437.0
+rect_pivot_offset = Vector2( 299.856, -0.0221341 )
+theme = ExtResource( 2 )
+window_title = "Pick A Shader"
+mode_overrides_title = false
+mode = 0
+access = 1
+current_dir = "user://media/jr/Mnemonic Courier/godot/_src/bos-godot"
+current_path = "user://media/jr/Mnemonic Courier/godot/_src/bos-godot/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NewShaderDialog" type="FileDialog" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -349.802
+margin_top = 55.7754
+margin_right = -6.80188
+margin_bottom = 466.775
+theme = ExtResource( 2 )
+window_title = "Create Shader"
+mode_overrides_title = false
+access = 1
+filters = PoolStringArray( "*.shader" )
+current_dir = "user://shaders"
+current_path = "user://shaders/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="SwitchShader" to="." method="_on_SwitchShader_pressed"]
 [connection signal="toggled" from="CodeToggle" to="." method="_on_CodeToggle_toggled"]
 [connection signal="pressed" from="Reset" to="." method="_on_Reset_pressed"]
+[connection signal="pressed" from="NewShader" to="." method="_on_NewShader_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
+[connection signal="file_selected" from="NewShaderDialog" to="." method="_on_NewShaderDialog_file_selected"]

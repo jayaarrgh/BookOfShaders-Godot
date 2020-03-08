@@ -7,7 +7,8 @@ static func copy_recursive(from, to):
 	
 	# create target directory, if nonexistent
 	if directory.dir_exists(to): return
-	else: directory.make_dir_recursive(to)
+	
+	directory.make_dir_recursive(to)
 	
 	# Open directory
 	var error = directory.open(from)
