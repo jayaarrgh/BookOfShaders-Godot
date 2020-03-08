@@ -25,6 +25,8 @@ The hideable text editor swaps the shader code every 200 ms, and saves the file 
 
 The reset button returns edited shaders to their default code.
 
+![](.gif/demo.gif)
+
 To reset all shaders to the default shader code, delete the shaders folder in the user directory and reopen the application.
 
 Create new folders and new shader code in the user directory.
