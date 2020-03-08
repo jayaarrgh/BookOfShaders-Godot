@@ -37,61 +37,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SwitchShader" type="Button" parent="."]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -105.097
-margin_top = 4.16963
-margin_right = -5.09619
-margin_bottom = 26.1696
-theme = ExtResource( 2 )
-text = "Switch Shader"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CodeToggle" type="Button" parent="."]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -188.917
-margin_top = 4.19305
-margin_right = -109.917
-margin_bottom = 26.1931
-theme = ExtResource( 2 )
-toggle_mode = true
-shortcut_in_tooltip = false
-pressed = true
-text = "Edit Code"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Reset" type="Button" parent="."]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -241.921
-margin_top = 4.3079
-margin_right = -193.921
-margin_bottom = 26.3079
-theme = ExtResource( 2 )
-text = "Reset"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="NewShader" type="Button" parent="."]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -333.808
-margin_top = 3.99564
-margin_right = -246.808
-margin_bottom = 25.9956
-theme = ExtResource( 2 )
-text = "New Shader"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="TextEdit" type="TextEdit" parent="."]
 anchor_right = 0.5
 anchor_bottom = 1.0
@@ -164,6 +109,61 @@ smooth_scrolling = true
 minimap_draw = true
 caret_block_mode = true
 caret_blink = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SwitchShader" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -105.097
+margin_top = 4.16963
+margin_right = -5.09619
+margin_bottom = 26.1696
+theme = ExtResource( 2 )
+text = "Switch Shader"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CodeToggle" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -188.917
+margin_top = 4.19305
+margin_right = -109.917
+margin_bottom = 26.1931
+theme = ExtResource( 2 )
+toggle_mode = true
+shortcut_in_tooltip = false
+pressed = true
+text = "Edit Code"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Reset" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -241.921
+margin_top = 4.3079
+margin_right = -193.921
+margin_bottom = 26.3079
+theme = ExtResource( 2 )
+text = "Reset"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NewShader" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -333.808
+margin_top = 3.99564
+margin_right = -246.808
+margin_bottom = 25.9956
+theme = ExtResource( 2 )
+text = "New Shader"
 __meta__ = {
 "_edit_use_anchors_": false
 }
