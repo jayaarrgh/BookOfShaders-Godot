@@ -1,6 +1,12 @@
 # The Book of Shaders (Godot)
 [The Book of Shaders](https://thebookofshaders.com/) ported to [Godot](https://www.godotengine.org/) by J.R. Robinson
 
+A learning resource for shader development.
+
+[Godot shading language](https://docs.godotengine.org/en/latest/tutorials/shading/shading_reference/shading_language.html)
+
+[Migrate to Godot's Shading Language](https://docs.godotengine.org/en/latest/tutorials/shading/migrating_to_godot_shader_language.html)
+
 Shout out to: [glslViewer](https://github.com/patriciogonzalezvivo/glslViewer)
 
 ## Installation and Use
