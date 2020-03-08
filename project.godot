@@ -8,12 +8,22 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Object",
+"class": "Util",
+"language": "GDScript",
+"path": "res://Util.gd"
+} ]
 _global_script_class_icons={
-
+"Util": ""
 }
 
 [application]
 
 config/name="Book Of Shaders - Godot"
 run/main_scene="res://Test.tscn"
+
+[display]
+
+window/size/width=1280
+window/size/height=720

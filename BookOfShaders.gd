@@ -1,103 +1,86 @@
 extends Control
 
-var shaders_path = "res://shaders"
+var res_shaders_dir = "res://shaders"
+var user_shaders_dir = "user://shaders"
+var current_shader_path : String
 
-#func get_dir_contents(rootPath: String) -> Array:
-#	var data = {}
-#	var dir = Directory.new()
-#
-#	if dir.open(rootPath) == OK:
-#		dir.list_dir_begin(true, false)
-#		_add_dir_contents(dir, data)
-#	else:
-#		push_error("An error occurred when trying to access the path.")
-#
-#	return data
-#
-#func _add_dir_contents(dir: Directory, data: Dictionary):
-#	var file_name = dir.get_next()
-#
-#	while (file_name != ""):
-#		var path = dir.get_current_dir() + "/" + file_name
-#
-#		if dir.current_is_dir():
-##			print("Found directory: %s" % path)
-#			var subDir = Directory.new()
-#			subDir.open(path)
-#			subDir.list_dir_begin(true, false)
-#			data[path] = []
-#			_add_dir_contents(subDir, data)
-#		else:
-##			print("Found file: %s" % path
-#			var current_dir_str = dir.get_current_dir()
-#			if data.has(current_dir_str):
-#				data[current_dir_str].append(path)
-#			else:
-#				data[current_dir_str] = [path]
-#
-#		file_name = dir.get_next()
-#
-#	dir.list_dir_end()
-#
-#func get_directory_dictionary():
-#	var data = get_dir_contents(shaders_path)
-#	var dirs = {}
-#	for dir in data[0]:
-#		dirs[dir] = []
-#		for f in data[1]:
-#			if dir in f:
-#				dirs[dir].append(f)
-#	return dirs
-#
-#func build_UI_from_dict():
-##	data = get_directory_dictionary()
-#	pass
+const UPDATE_SHADER : float = 0.2 # update shader every 200ms
+const SAVE_SHADER   : float = 2.0 # save every 2 seconds
+
+var d = 0.0
+var d2 = 0.0
+
+func _ready():
+	# res is not editable outside of editor - move res shaders to user directory
+	Util.copy_recursive(res_shaders_dir, user_shaders_dir)
+	# set the current shader path to the new or existing user path now
+	current_shader_path = $ColorRect.material.shader.get_path().replace('res://', 'user://')
+	$ColorRect.material.shader = load(current_shader_path)
+	$TextEdit.text = $ColorRect.material.shader.code
+	# pop up FileDialog on start, use user dir
+	$FileDialog.current_dir = user_shaders_dir
+	$FileDialog.current_path = user_shaders_dir
+	$FileDialog.popup()
 
 func _input(event):
 	if event is InputEventMouseMotion:
 		# send mouse movement to the shader - even if the shader doesn't have the param
 		$ColorRect.material.set_shader_param('mouse_position', get_local_mouse_position())
 
+func _process(delta):
+	d += delta
+	d2 += delta
+	if d > UPDATE_SHADER:
+		d = float()
+		_copy_editor_shader_code()
+	if d2 > SAVE_SHADER:
+		d2 = float()
+		_save_shader()
 
+func _copy_editor_shader_code():
+	if $TextEdit.text == "": return
+	$ColorRect.material.shader.set_code($TextEdit.text)
 
-func _ready():
-	# show dialog immediately
-	$FileDialog.popup()
-#	var data = get_dir_contents(shaders_path)
-	
-#	# printing folder data.. not itself recursive...
-#	for folder in data.keys():
-#		yield(get_tree(),"idle_frame")
-#		yield(get_tree(),"idle_frame")
-#		print(folder, ": [")
-#		for file in data[folder]:
-#			yield(get_tree(),"idle_frame")
-#			yield(get_tree(),"idle_frame")
-#			print('	', file, ",")
-#		print("	]")
+func _save_shader():
+	# TODO: ? allow user to choose whether autosave happens?
+	var shader_to_save = $ColorRect.material.shader
+	var _e = ResourceSaver.save(current_shader_path, shader_to_save)
+	if _e != OK:
+		print('something went wrong when trying to save shader')
 
-
-
-func _on_FileDialog_file_selected(path):
-	# NOTE: if FileDialog type is res, (rather than filesystem)
-	# the file dialog appears, but is non functional...
-	print('file selected: ', path)
-	var shader = load(path)
-	print(shader)
-	$ColorRect.material.set_shader(shader)
+## GUI CALLBACKS
 
 func _on_SwitchShader_pressed():
 	$FileDialog.popup()
 
-# func _on_FileDialog_dir_selected(dir):
-# 	# this is his on exports.. but not in editor...
-# 	print('dir selected: ', dir)
+func _on_FileDialog_file_selected(path):
+	_load_shader(path)
 
-# func _on_FileDialog_files_selected(paths):
-# 	print('paths selected: ', paths)
+func _on_CodeToggle_toggled(_button_pressed):
+	if $TextEdit.is_visible_in_tree(): $TextEdit.hide()
+	else: $TextEdit.show()
 
-# func _on_FileDialog_confirmed():
-# 	print('confirmed')
+func _on_Reset_pressed():
+	_reset_to_default_shader()
 
-# func _on_FileDialog_custom_action(action):
-# 	print('custom action', action)
+func _load_shader(path):
+	current_shader_path = path
+	var shader = load(current_shader_path)
+	if not shader:
+		print('could not load resource')
+		return
+	if not shader is Shader:
+		print('that wasnt a shader')
+		return
+	$ColorRect.material.set_shader(shader)
+	$TextEdit.text = shader.code
+
+func _reset_to_default_shader():
+	var resource_version = current_shader_path.replace('user://', 'res://')
+	var resource_shader = load(resource_version)
+	if not resource_shader:
+		print('Could not find original resource shader')
+		return
+	$ColorRect.material.shader.set_code(resource_shader.code)
+	$TextEdit.text = resource_shader.code
+	_save_shader()

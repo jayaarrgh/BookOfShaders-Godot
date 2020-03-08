@@ -3,6 +3,8 @@ shader_type canvas_item;
 // Author @patriciogv - 2015
 // http://patriciogonzalezvivo.com
 
+uniform vec2 mouse_position;
+
 float random (vec2 st) {
     return fract(sin(dot(st.xy,
                          vec2(12.9898,78.233)))*
@@ -12,7 +14,7 @@ float random (vec2 st) {
 void fragment() {
     vec2 st = FRAGCOORD.xy/(1.0/SCREEN_PIXEL_SIZE).xy;
 
-    float rnd = random( st );
+    float rnd = random(-mouse_position/st);
 
     COLOR = vec4(vec3(rnd),1.0);
 }

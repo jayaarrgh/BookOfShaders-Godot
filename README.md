@@ -1,20 +1,45 @@
 # The Book of Shaders (Godot)
-The book of shaders examples from the glslViewer project ported to Godot by J.R. Robinson.
+[The Book of Shaders](https://thebookofshaders.com/) ported to [Godot](https://www.godotengine.org/) by J.R. Robinson
 
-[The Book of Shaders](https://thebookofshaders.com/)
+Shout out to: [glslViewer](https://github.com/patriciogonzalezvivo/glslViewer)
 
-[glslViewer](https://github.com/patriciogonzalezvivo/glslViewer)
+## Installation and Use
+#### Option A
+Download from releases
 
-# WIP
+#### Option B
+```
+git clone https://github.com/jayaarrgh/BookOfShaders-Godot.git
+cd BookOfShaders-Godot
+```
+Open with Godot 3.2
 
-## How To
-Open the project with Godot 3.2
+Export the project on your platform and use the executable.
 
-Load Test.tscn scene
+or
 
-On the ColorRect's material, load in shaders from the shaders directory.
+Run the Main.tscn. Use the file dialog to switch shaders.
+
+## Tips
+The hideable text editor swaps the shader code every 200 ms, and saves the file every 3000ms.
+
+The reset button returns edited shaders to their default code.
+
+To reset all shaders to the default shader code, delete the shaders folder in the user directory and reopen the application.
+
+Create new folders and new shader code in the user directory.
+
+*WARNING*: Automatic saving during runtime will overwrite external editor changes.
+If using an external text editor, this application should be closed first.
 
 
-## TODO
-Running good in editor. FileDialog open signal seems to fail on exported builds.
+#### User Directory
+
+    Windows:
+        %APPDATA%\Godot\app_userdata\Project Name
+
+    On GNU/Linux: 
+        $HOME/.godot/app_userdata/Project Name
+        OR
+        $HOME/.local/share/godot/app_userdata/Project Name
 
