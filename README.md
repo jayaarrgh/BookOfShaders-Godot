@@ -11,7 +11,7 @@ Shout out to: [glslViewer](https://github.com/patriciogonzalezvivo/glslViewer)
 
 ## Installation and Use
 #### Option A
-Download from releases
+Download from releases or at [itch](https://jayaarrgh.itch.io/book-of-shaders-godot)
 
 #### Option B
 ```
