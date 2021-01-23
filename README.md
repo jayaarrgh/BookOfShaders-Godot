@@ -3,9 +3,9 @@
 
 A learning resource for shader development.
 
-[Godot shading language](https://docs.godotengine.org/en/latest/tutorials/shading/shading_reference/shading_language.html)
+[Godot shading language](https://docs.godotengine.org/en/stable/tutorials/shading/shading_reference/shading_language.html)
 
-[Migrate to Godot's Shading Language](https://docs.godotengine.org/en/latest/tutorials/shading/migrating_to_godot_shader_language.html)
+[Migrate to Godot's Shading Language](https://docs.godotengine.org/en/stable/tutorials/shading/migrating_to_godot_shader_language.html#doc-migrating-to-godot-shader-language)
 
 Shout out to: [glslViewer](https://github.com/patriciogonzalezvivo/glslViewer)
 
