@@ -27,6 +27,10 @@ func _input(event):
 		# send mouse movement to the shader - even if the shader doesn't have the param
 		$ColorRect.material.set_shader_param('mouse_position', get_local_mouse_position())
 
+func _unhandled_input(event):
+	# Prevent web page scrolling?
+	pass
+
 func _process(delta):
 	update_delta += delta
 	save_delta += delta
