@@ -169,6 +169,6 @@ func _on_2D3D_button_up():
 	$FileDialog.current_path = user_shader_dir
 	$NewShaderDialog.current_dir = user_shader_dir
 	$NewShaderDialog.current_path = user_shader_dir
-	current_shader_path = target.shader.get_path()
+	current_shader_path = target.shader.get_path().replace('res://', 'user://')
 	textEdit.text = target.shader.code
 	self.set_process(true)
