@@ -58,10 +58,10 @@ func _ready():
 
 
 func _input(event):
-#	if event is InputEventMouseMotion:
+	if !mode2d: return
+	if event is InputEventMouseMotion:
 		# send mouse movement to the shader - even if the shader doesn't have the param
-#		meshMat.set_shader_param('mouse_position', get_local_mouse_position())
-	pass
+		target.set_shader_param('mouse_position', get_local_mouse_position())
 
 
 func _process(delta):
