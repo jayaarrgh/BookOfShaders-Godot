@@ -12,7 +12,6 @@
 
 [sub_resource type="ShaderMaterial" id=8]
 shader = ExtResource( 6 )
-shader_param/albedo = null
 shader_param/specular = null
 shader_param/metallic = null
 shader_param/roughness = null

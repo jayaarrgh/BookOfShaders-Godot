@@ -1,5 +1,6 @@
 extends Control
 
+
 const RES_SHADER_DIR : String = "res://shaders"
 const USER_SHADER_DIR : String = "user://shaders"
 const SHADER_TEMPLATE : String = "shader_type canvas_item;\n\nvoid fragment(){\n\tCOLOR = vec4(vec3(0.0,0.5,0.3), 1.);\n}"
@@ -11,10 +12,12 @@ var save_delta = 0.0
 var current_shader_path : String
 
 onready var main3d : Spatial = preload("res://Main3D.tscn").instance()
+onready var colorRect := $ColorRect
+onready var textEdit := $TextEdit
+
 
 func _initialize_3d():
 	# setup 3d scene
-	main3d = preload("res://Main3D.tscn").instance()
 	get_tree().root.add_child(main3d)
 	var main3dMain = main3d.get_node("Main")
 	main3dMain.main2d = self
@@ -24,23 +27,24 @@ func _initialize_3d():
 
 
 func _ready():
-
 	# res is not editable outside of editor - move res shaders to user directory
 	Util.copy_recursive(RES_SHADER_DIR, USER_SHADER_DIR)
 	# set the current shader path to the new or existing user path now
-	current_shader_path = $ColorRect.material.shader.get_path().replace('res://', 'user://')
-	$ColorRect.material.shader = load(current_shader_path)
-	$TextEdit.text = $ColorRect.material.shader.code
+	current_shader_path = colorRect.material.shader.get_path().replace('res://', 'user://')
+	colorRect.material.shader = load(current_shader_path)
+	textEdit.text = colorRect.material.shader.code
 	# pop up FileDialog on start, use user dir
 	$FileDialog.current_dir = USER_SHADER_DIR
 	$FileDialog.current_path = USER_SHADER_DIR
 	$FileDialog.popup()
 	call_deferred('_initialize_3d')
 
+
 func _input(event):
 	if event is InputEventMouseMotion:
 		# send mouse movement to the shader - even if the shader doesn't have the param
-		$ColorRect.material.set_shader_param('mouse_position', get_local_mouse_position())
+		colorRect.material.set_shader_param('mouse_position', get_local_mouse_position())
+
 
 func _process(delta):
 	update_delta += delta
@@ -53,12 +57,12 @@ func _process(delta):
 		_save_shader()
 
 func _copy_editor_shader_code():
-	if $TextEdit.text == "": return
-	$ColorRect.material.shader.set_code($TextEdit.text)
+	if textEdit.text == "": return
+	colorRect.material.shader.set_code(textEdit.text)
 
 func _save_shader():
 	# TODO: ? allow user to choose whether autosave happens?
-	var shader_to_save = $ColorRect.material.shader
+	var shader_to_save = colorRect.material.shader
 	var _e = ResourceSaver.save(current_shader_path, shader_to_save)
 	if _e != OK:
 		print('something went wrong when trying to save shader')
@@ -71,8 +75,8 @@ func _on_SwitchShader_pressed():
 	$FileDialog.popup()
 
 func _on_CodeToggle_toggled(_button_pressed):
-	if $TextEdit.is_visible_in_tree(): $TextEdit.hide()
-	else: $TextEdit.show()
+	if textEdit.is_visible_in_tree(): textEdit.hide()
+	else: textEdit.show()
 
 func _on_Reset_pressed():
 	# overwrite user data with res version
@@ -81,19 +85,21 @@ func _on_Reset_pressed():
 	if not resource_shader:
 		print('Could not find original resource shader')
 		return
-	$TextEdit.text = resource_shader.code
-	$ColorRect.material.shader.set_code(resource_shader.code)
+	textEdit.text = resource_shader.code
+	colorRect.material.shader.set_code(resource_shader.code)
 	_save_shader()
+
 
 func _on_NewShaderDialog_file_selected(path):
 	# create new shader
-	if not path.ends_with('.shader'): return
+	if not path.ends_with('.gdshader') or not path.ends_with('.shader'): return
 	current_shader_path = path
 	var new_shader = Shader.new()
 	new_shader.code = SHADER_TEMPLATE
-	$TextEdit.text = SHADER_TEMPLATE
-	$ColorRect.material.set_shader(new_shader)
+	textEdit.text = SHADER_TEMPLATE
+	colorRect.material.set_shader(new_shader)
 	_save_shader()
+
 
 func _on_FileDialog_file_selected(path):
 	# load the selected shader
@@ -105,8 +111,8 @@ func _on_FileDialog_file_selected(path):
 	if not shader is Shader:
 		print('that wasnt a shader')
 		return
-	$TextEdit.text = shader.code
-	$ColorRect.material.set_shader(shader)
+	textEdit.text = shader.code
+	colorRect.material.set_shader(shader)
 
 
 func _on_3D_pressed():
