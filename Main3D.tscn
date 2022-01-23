@@ -57,6 +57,7 @@ transform = Transform( 1, 0, 0, 0, 0.918412, 0.395626, 0, -0.395626, 0.918412, 0
 
 [node name="Camera" type="Camera" parent="GimbleY/GimbleX"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4 )
+current = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 7 )
@@ -212,6 +213,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="2D" type="Button" parent="Main"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -374.0
+margin_top = 4.0
+margin_right = -340.0
+margin_bottom = 26.0
+theme = ExtResource( 5 )
+shortcut_in_tooltip = false
+text = "2D"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="FileDialog" type="FileDialog" parent="Main"]
 anchor_left = 1.0
 anchor_right = 1.0
@@ -254,5 +269,6 @@ __meta__ = {
 [connection signal="toggled" from="Main/CodeToggle" to="Main" method="_on_CodeToggle_toggled"]
 [connection signal="pressed" from="Main/Reset" to="Main" method="_on_Reset_pressed"]
 [connection signal="pressed" from="Main/NewShader" to="Main" method="_on_NewShader_pressed"]
+[connection signal="pressed" from="Main/2D" to="Main" method="_on_2D_pressed"]
 [connection signal="file_selected" from="Main/FileDialog" to="Main" method="_on_FileDialog_file_selected"]
 [connection signal="file_selected" from="Main/NewShaderDialog" to="Main" method="_on_NewShaderDialog_file_selected"]

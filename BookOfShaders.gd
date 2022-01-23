@@ -10,7 +10,21 @@ var update_delta = 0.0
 var save_delta = 0.0
 var current_shader_path : String
 
+onready var main3d : Spatial = preload("res://Main3D.tscn").instance()
+
+func _initialize_3d():
+	# setup 3d scene
+	main3d = preload("res://Main3D.tscn").instance()
+	get_tree().root.add_child(main3d)
+	var main3dMain = main3d.get_node("Main")
+	main3dMain.main2d = self
+	main3dMain.visible = false
+	main3dMain.set_process(false)
+	main3d.visible = false
+
+
 func _ready():
+
 	# res is not editable outside of editor - move res shaders to user directory
 	Util.copy_recursive(RES_SHADER_DIR, USER_SHADER_DIR)
 	# set the current shader path to the new or existing user path now
@@ -21,6 +35,7 @@ func _ready():
 	$FileDialog.current_dir = USER_SHADER_DIR
 	$FileDialog.current_path = USER_SHADER_DIR
 	$FileDialog.popup()
+	call_deferred('_initialize_3d')
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -92,3 +107,13 @@ func _on_FileDialog_file_selected(path):
 		return
 	$TextEdit.text = shader.code
 	$ColorRect.material.set_shader(shader)
+
+
+func _on_3D_pressed():
+	# hide this scene and turn off processing?
+	main3d.visible = true
+	var main3dMain = main3d.get_node('Main')
+	main3dMain.visible = true
+	main3dMain.set_process(true)
+	self.hide()
+	self.set_process(false)

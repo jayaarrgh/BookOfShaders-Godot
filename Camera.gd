@@ -21,3 +21,4 @@ func _input(event):
 	if event is InputEventMouseMotion and middle_clicked:
 		self.rotate_y(deg2rad(-event.relative.x*mouse_sens))
 		gimbleX.rotate_x(deg2rad(-event.relative.y*mouse_sens))
+

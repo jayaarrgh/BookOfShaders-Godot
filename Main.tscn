@@ -43,7 +43,6 @@ anchor_right = 0.5
 anchor_bottom = 1.0
 focus_mode = 1
 theme = ExtResource( 2 )
-custom_fonts/font = SubResource( 2 )
 custom_colors/member_variable_color = Color( 0.909804, 0.172549, 0.152941, 1 )
 custom_colors/function_color = Color( 0.580392, 0.737255, 0.321569, 1 )
 custom_colors/symbol_color = Color( 0.92549, 0.541176, 0.0470588, 1 )
@@ -53,6 +52,7 @@ custom_colors/line_number_color = Color( 1, 1, 1, 0.521569 )
 custom_colors/number_color = Color( 0.988235, 0.623529, 0.843137, 1 )
 custom_colors/brace_mismatch_color = Color( 1, 0, 0, 1 )
 custom_colors/current_line_color = Color( 0.921569, 0.921569, 0.921569, 0.0980392 )
+custom_fonts/font = SubResource( 2 )
 text = "shader_type canvas_item;
 
 // Created by inigo quilez - iq/2013
@@ -170,6 +170,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="3D" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -380.0
+margin_top = 4.0
+margin_right = -340.0
+margin_bottom = 26.0
+theme = ExtResource( 2 )
+shortcut_in_tooltip = false
+text = "3D"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="FileDialog" type="FileDialog" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
@@ -182,8 +196,9 @@ window_title = "Pick A Shader"
 mode_overrides_title = false
 mode = 0
 access = 1
-current_dir = "user://media/jr/Mnemonic Courier/godot/_src/bos-godot"
-current_path = "user://media/jr/Mnemonic Courier/godot/_src/bos-godot/"
+show_hidden_files = true
+current_dir = "user://media/jr/Mnemonic Courier/godot/_src/BookOfShaders-Godot"
+current_path = "user://media/jr/Mnemonic Courier/godot/_src/BookOfShaders-Godot/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -200,14 +215,17 @@ window_title = "Create Shader"
 mode_overrides_title = false
 access = 1
 filters = PoolStringArray( "*.shader" )
+show_hidden_files = true
 current_dir = "user://shaders"
 current_path = "user://shaders/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="pressed" from="SwitchShader" to="." method="_on_SwitchShader_pressed"]
 [connection signal="toggled" from="CodeToggle" to="." method="_on_CodeToggle_toggled"]
 [connection signal="pressed" from="Reset" to="." method="_on_Reset_pressed"]
 [connection signal="pressed" from="NewShader" to="." method="_on_NewShader_pressed"]
+[connection signal="pressed" from="3D" to="." method="_on_3D_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
 [connection signal="file_selected" from="NewShaderDialog" to="." method="_on_NewShaderDialog_file_selected"]
