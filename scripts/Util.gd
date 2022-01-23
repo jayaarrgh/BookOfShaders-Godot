@@ -1,5 +1,6 @@
-extends Object
 class_name Util
+extends Object
+
 
 # Thanks to https://www.davidepesce.com/2019/11/04/essential-guide-to-godot-filesystem-api/
 static func copy_recursive(from, to):

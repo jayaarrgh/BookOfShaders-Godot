@@ -54,6 +54,8 @@ func _ready():
 	# pop up FileDialog on start, use user dir
 	$FileDialog.current_dir = user_shader_dir
 	$FileDialog.current_path = user_shader_dir
+	$NewShaderDialog.current_dir = user_shader_dir
+	$NewShaderDialog.current_path = user_shader_dir
 	$FileDialog.popup()
 
 
@@ -165,6 +167,8 @@ func _on_2D3D_button_up():
 	save_delta = 0.0
 	$FileDialog.current_dir = user_shader_dir
 	$FileDialog.current_path = user_shader_dir
+	$NewShaderDialog.current_dir = user_shader_dir
+	$NewShaderDialog.current_path = user_shader_dir
 	current_shader_path = target.shader.get_path()
 	textEdit.text = target.shader.code
 	self.set_process(true)
