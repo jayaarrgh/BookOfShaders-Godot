@@ -1,70 +1,88 @@
 extends Control
 
+# TODO: in 3d mode show more options
+	# Switch mesh to sphere, suzanne, teapot, etc
+# TODO: Allow applying texture to shader uniform
 
-const RES_SHADER_DIR : String = "res://shaders"
-const USER_SHADER_DIR : String = "user://shaders"
-const SHADER_TEMPLATE : String = "shader_type canvas_item;\n\nvoid fragment(){\n\tCOLOR = vec4(vec3(0.0,0.5,0.3), 1.);\n}"
-const UPDATE_SHADER : float = 0.2 # update shader every 200ms
-const SAVE_SHADER   : float = 2.0 # save every 2 seconds
 
+const RES_SHADER_DIR_2D  : String = "res://shaders"
+const USER_SHADER_DIR_2D : String = "user://shaders"
+const SHADER_TEMPLATE_2D : String = "shader_type canvas_item;\n\nvoid fragment(){\n\tCOLOR = vec4(vec3(0.0,0.5,0.3), 1.);\n}"
+const RES_SHADER_DIR_3D  : String = "res://shaders/3D/"
+const USER_SHADER_DIR_3D : String = "user://shaders/3D/"
+const SHADER_TEMPLATE_3D : String = "shader_type spatial;\nrender_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;\n//TODO: Accept a texture in our editor\n//uniform sampler2D texture_albedo : hint_albedo;\n\nvarying smooth vec3 our_color;\n//varying flat vec3 our_color;\n\nvoid vertex() {\n	our_color = VERTEX;\n}\n\n\nvoid fragment() {\n	ALBEDO = our_color.rgb;\n}\n"
+const UPDATE_SHADER_2D   : float = 0.2 # update shader every 200ms
+const SAVE_SHADER_2D     : float = 2.0 # save every 2 seconds
+# update in 3d is a bit slower at Godot stutters when loading 3d shaders 
+const UPDATE_SHADER_3D   : float = 1.0 # update shader every 1s
+const SAVE_SHADER_3D     : float = 4.0 # save every 4s
+
+
+onready var textEdit  : TextEdit  = $TextEdit
+onready var colorRect : ColorRect = $ColorRect
+onready var rectMat   : Material  = colorRect.material
+onready var main3d    : Spatial   = $"../Main3D"
+onready var meshMat   : Material  = $"../Main3D/MeshInstance".get_surface_material(0)
+onready var dimension : Button    = $"2D3D"
+
+
+# STATE
+var target # either a mesh or color rect depending on mode
+var mode2d = true
+var res_shader_dir = RES_SHADER_DIR_2D
+var user_shader_dir = USER_SHADER_DIR_2D
+var shader_template = SHADER_TEMPLATE_2D
+var current_shader_path
+var update_shader
+var save_shader
 var update_delta = 0.0
 var save_delta = 0.0
-var current_shader_path : String
-
-onready var main3d : Spatial = preload("res://Main3D.tscn").instance()
-onready var colorRect := $ColorRect
-onready var textEdit := $TextEdit
-
-
-func _initialize_3d():
-	# setup 3d scene
-	get_tree().root.add_child(main3d)
-	var main3dMain = main3d.get_node("Main")
-	main3dMain.main2d = self
-	main3dMain.visible = false
-	main3dMain.set_process(false)
-	main3d.visible = false
 
 
 func _ready():
+	dimension.text = "3D"
+	target = rectMat
 	# res is not editable outside of editor - move res shaders to user directory
-	Util.copy_recursive(RES_SHADER_DIR, USER_SHADER_DIR)
+	Util.copy_recursive(res_shader_dir, user_shader_dir)
 	# set the current shader path to the new or existing user path now
-	current_shader_path = colorRect.material.shader.get_path().replace('res://', 'user://')
-	colorRect.material.shader = load(current_shader_path)
-	textEdit.text = colorRect.material.shader.code
+	current_shader_path = target.shader.get_path().replace('res://', 'user://')
+	target.shader = load(current_shader_path)
+	textEdit.text = target.shader.code
+	update_shader = UPDATE_SHADER_2D
+	save_shader = SAVE_SHADER_2D
+	shader_template = SHADER_TEMPLATE_2D
 	# pop up FileDialog on start, use user dir
-	$FileDialog.current_dir = USER_SHADER_DIR
-	$FileDialog.current_path = USER_SHADER_DIR
+	$FileDialog.current_dir = user_shader_dir
+	$FileDialog.current_path = user_shader_dir
 	$FileDialog.popup()
-	call_deferred('_initialize_3d')
 
 
 func _input(event):
-	if event is InputEventMouseMotion:
+#	if event is InputEventMouseMotion:
 		# send mouse movement to the shader - even if the shader doesn't have the param
-		colorRect.material.set_shader_param('mouse_position', get_local_mouse_position())
+#		meshMat.set_shader_param('mouse_position', get_local_mouse_position())
+	pass
 
 
 func _process(delta):
 	update_delta += delta
 	save_delta += delta
-	if update_delta > UPDATE_SHADER:
+	if update_delta > update_shader:
 		update_delta = float()
 		_copy_editor_shader_code()
-	if save_delta > SAVE_SHADER:
+	if save_delta > save_shader:
 		save_delta = float()
 		_save_shader()
 
 
 func _copy_editor_shader_code():
 	if textEdit.text == "": return
-	colorRect.material.shader.set_code(textEdit.text)
+	target.shader.set_code(textEdit.text)
 
 
 func _save_shader():
 	# TODO: ? allow user to choose whether autosave happens?
-	var shader_to_save = colorRect.material.shader
+	var shader_to_save = target.shader
 	var _e = ResourceSaver.save(current_shader_path, shader_to_save)
 	if _e != OK:
 		print('something went wrong when trying to save shader')
@@ -92,7 +110,7 @@ func _on_Reset_pressed():
 		print('Could not find original resource shader')
 		return
 	textEdit.text = resource_shader.code
-	colorRect.material.shader.set_code(resource_shader.code)
+	target.shader.set_code(resource_shader.code)
 	_save_shader()
 
 
@@ -101,9 +119,9 @@ func _on_NewShaderDialog_file_selected(path):
 	if not path.ends_with('.gdshader') or not path.ends_with('.shader'): return
 	current_shader_path = path
 	var new_shader = Shader.new()
-	new_shader.code = SHADER_TEMPLATE
-	textEdit.text = SHADER_TEMPLATE
-	colorRect.material.set_shader(new_shader)
+	new_shader.code = shader_template
+	textEdit.text = shader_template
+	target.set_shader(new_shader)
 	_save_shader()
 
 
@@ -118,14 +136,35 @@ func _on_FileDialog_file_selected(path):
 		print('that wasnt a shader')
 		return
 	textEdit.text = shader.code
-	colorRect.material.set_shader(shader)
+	target.set_shader(shader)
 
 
-func _on_3D_pressed():
-	# hide this scene and turn off processing?
-	main3d.visible = true
-	var main3dMain = main3d.get_node('Main')
-	main3dMain.visible = true
-	main3dMain.set_process(true)
-	self.hide()
+func _on_2D3D_button_up():
 	self.set_process(false)
+	mode2d = !mode2d
+	if mode2d:
+		dimension.text = "3D"
+		target = rectMat
+		shader_template = SHADER_TEMPLATE_2D
+		update_shader = UPDATE_SHADER_2D
+		save_shader = SAVE_SHADER_2D
+		user_shader_dir = USER_SHADER_DIR_2D
+		colorRect.show()
+		main3d.hide()
+	else:
+		dimension.text = "2D"
+		target = meshMat
+		shader_template = SHADER_TEMPLATE_3D
+		update_shader = UPDATE_SHADER_3D
+		save_shader = SAVE_SHADER_3D
+		user_shader_dir = USER_SHADER_DIR_3D
+		main3d.show()
+		colorRect.hide()
+	
+	update_delta = 0.0
+	save_delta = 0.0
+	$FileDialog.current_dir = user_shader_dir
+	$FileDialog.current_path = user_shader_dir
+	current_shader_path = target.shader.get_path()
+	textEdit.text = target.shader.code
+	self.set_process(true)

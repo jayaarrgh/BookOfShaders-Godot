@@ -3,7 +3,7 @@
 
 A learning resource for shader development.
 
-Now featuring a 3D section for additional learning!
+Now featuring a 3D section for additional learning! Use middle mouse button to swing around the mesh in 3d view.
 
 [Godot shading language](https://docs.godotengine.org/en/stable/tutorials/shading/shading_reference/shading_language.html)
 
