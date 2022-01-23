@@ -56,9 +56,11 @@ func _process(delta):
 		save_delta = float()
 		_save_shader()
 
+
 func _copy_editor_shader_code():
 	if textEdit.text == "": return
 	colorRect.material.shader.set_code(textEdit.text)
+
 
 func _save_shader():
 	# TODO: ? allow user to choose whether autosave happens?
@@ -67,16 +69,20 @@ func _save_shader():
 	if _e != OK:
 		print('something went wrong when trying to save shader')
 
+
 ## GUI CALLBACKS
 func _on_NewShader_pressed():
 	$NewShaderDialog.popup()
 
+
 func _on_SwitchShader_pressed():
 	$FileDialog.popup()
+
 
 func _on_CodeToggle_toggled(_button_pressed):
 	if textEdit.is_visible_in_tree(): textEdit.hide()
 	else: textEdit.show()
+
 
 func _on_Reset_pressed():
 	# overwrite user data with res version

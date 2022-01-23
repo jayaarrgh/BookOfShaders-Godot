@@ -12,14 +12,6 @@
 
 [sub_resource type="ShaderMaterial" id=8]
 shader = ExtResource( 6 )
-shader_param/specular = null
-shader_param/metallic = null
-shader_param/roughness = null
-shader_param/point_size = null
-shader_param/uv1_scale = null
-shader_param/uv1_offset = null
-shader_param/uv2_scale = null
-shader_param/uv2_offset = null
 
 [sub_resource type="ProceduralSky" id=6]
 
