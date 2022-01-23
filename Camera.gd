@@ -11,6 +11,7 @@ func _ready():
 	pass # Replace with function body.
 
 func _input(event):
+	# TODO: other in editor mouse controls for camera
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_MIDDLE:
 			if event.pressed:
