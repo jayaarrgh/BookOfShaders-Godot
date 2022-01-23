@@ -1,9 +1,9 @@
 extends Control
 
 # TODO: in 3d mode show more options
-	# Switch mesh to sphere, suzanne, teapot, etc
+	# Switch target mesh to sphere, suzanne, teapot, etc, and swap the material shader
+# TODO: only swap 3d shader code when changes have been made
 # TODO: Allow applying texture to shader uniform
-
 
 const RES_SHADER_DIR_2D  : String = "res://shaders"
 const USER_SHADER_DIR_2D : String = "user://shaders"
@@ -21,8 +21,8 @@ const SAVE_SHADER_3D     : float = 4.0 # save every 4s
 onready var textEdit  : TextEdit  = $TextEdit
 onready var colorRect : ColorRect = $ColorRect
 onready var rectMat   : Material  = colorRect.material
-onready var main3d    : Spatial   = $"../Main3D"
-onready var meshMat   : Material  = $"../Main3D/MeshInstance".get_surface_material(0)
+onready var main3d    : Spatial   = $"../3D"
+onready var meshMat   : Material  = $"../3D/MeshInstance".get_surface_material(0)
 onready var dimension : Button    = $"2D3D"
 
 

@@ -33,29 +33,29 @@ extra_spacing_bottom = -2
 extra_spacing_space = -1
 font_data = ExtResource( 3 )
 
-[node name="App" type="Node"]
+[node name="Main" type="Node"]
 
-[node name="Main3D" type="Spatial" parent="."]
+[node name="3D" type="Spatial" parent="."]
 
-[node name="MeshInstance" type="MeshInstance" parent="Main3D"]
+[node name="MeshInstance" type="MeshInstance" parent="3D"]
 mesh = SubResource( 3 )
 material/0 = SubResource( 8 )
 
-[node name="GimbleY" type="Spatial" parent="Main3D"]
+[node name="GimbleY" type="Spatial" parent="3D"]
 transform = Transform( 0.607431, 0, 0.794372, 0, 1, 0, -0.794372, 0, 0.607431, 0, 0, 0 )
 script = ExtResource( 7 )
 
-[node name="GimbleX" type="Spatial" parent="Main3D/GimbleY"]
+[node name="GimbleX" type="Spatial" parent="3D/GimbleY"]
 transform = Transform( 1, 0, 0, 0, 0.918412, 0.395626, 0, -0.395626, 0.918412, 0, 0, 0 )
 
-[node name="Camera" type="Camera" parent="Main3D/GimbleY/GimbleX"]
+[node name="Camera" type="Camera" parent="3D/GimbleY/GimbleX"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4 )
 current = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="Main3D"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="3D"]
 environment = SubResource( 7 )
 
-[node name="Main" type="Control" parent="."]
+[node name="UI" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
@@ -63,7 +63,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="Main"]
+[node name="ColorRect" type="ColorRect" parent="UI"]
 material = SubResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -73,7 +73,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextEdit" type="TextEdit" parent="Main"]
+[node name="TextEdit" type="TextEdit" parent="UI"]
 anchor_right = 0.5
 anchor_bottom = 1.0
 focus_mode = 1
@@ -150,7 +150,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SwitchShader" type="Button" parent="Main"]
+[node name="SwitchShader" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -105.097
@@ -163,7 +163,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CodeToggle" type="Button" parent="Main"]
+[node name="CodeToggle" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -188.917
@@ -179,7 +179,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Reset" type="Button" parent="Main"]
+[node name="Reset" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -241.921
@@ -192,7 +192,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NewShader" type="Button" parent="Main"]
+[node name="NewShader" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -333.808
@@ -205,7 +205,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="2D3D" type="Button" parent="Main"]
+[node name="2D3D" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -374.0
@@ -219,7 +219,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FileDialog" type="FileDialog" parent="Main"]
+[node name="FileDialog" type="FileDialog" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -297.263
@@ -239,7 +239,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NewShaderDialog" type="FileDialog" parent="Main"]
+[node name="NewShaderDialog" type="FileDialog" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -349.802
@@ -258,10 +258,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="pressed" from="Main/SwitchShader" to="Main" method="_on_SwitchShader_pressed"]
-[connection signal="toggled" from="Main/CodeToggle" to="Main" method="_on_CodeToggle_toggled"]
-[connection signal="pressed" from="Main/Reset" to="Main" method="_on_Reset_pressed"]
-[connection signal="pressed" from="Main/NewShader" to="Main" method="_on_NewShader_pressed"]
-[connection signal="button_up" from="Main/2D3D" to="Main" method="_on_2D3D_button_up"]
-[connection signal="file_selected" from="Main/FileDialog" to="Main" method="_on_FileDialog_file_selected"]
-[connection signal="file_selected" from="Main/NewShaderDialog" to="Main" method="_on_NewShaderDialog_file_selected"]
+[connection signal="pressed" from="UI/SwitchShader" to="UI" method="_on_SwitchShader_pressed"]
+[connection signal="toggled" from="UI/CodeToggle" to="UI" method="_on_CodeToggle_toggled"]
+[connection signal="pressed" from="UI/Reset" to="UI" method="_on_Reset_pressed"]
+[connection signal="pressed" from="UI/NewShader" to="UI" method="_on_NewShader_pressed"]
+[connection signal="button_up" from="UI/2D3D" to="UI" method="_on_2D3D_button_up"]
+[connection signal="file_selected" from="UI/FileDialog" to="UI" method="_on_FileDialog_file_selected"]
+[connection signal="file_selected" from="UI/NewShaderDialog" to="UI" method="_on_NewShaderDialog_file_selected"]
