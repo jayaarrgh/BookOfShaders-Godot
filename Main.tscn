@@ -1,12 +1,12 @@
 [gd_scene load_steps=14 format=2]
 
-[ext_resource path="res://BookOfShaders.gd" type="Script" id=1]
-[ext_resource path="res://TextEdit.gd" type="Script" id=2]
+[ext_resource path="res://scripts/BookOfShaders.gd" type="Script" id=1]
+[ext_resource path="res://scripts/TextEdit.gd" type="Script" id=2]
 [ext_resource path="res://Inconsolata.otf" type="DynamicFontData" id=3]
 [ext_resource path="res://shaders/chapter_12/2d-voronoise.shader" type="Shader" id=4]
 [ext_resource path="res://DarkTheme.tres" type="Theme" id=5]
 [ext_resource path="res://shaders/3D/3DTest.gdshader" type="Shader" id=6]
-[ext_resource path="res://Camera.gd" type="Script" id=7]
+[ext_resource path="res://scripts/Camera.gd" type="Script" id=7]
 
 [sub_resource type="CubeMesh" id=3]
 
@@ -231,6 +231,7 @@ window_title = "Pick A Shader"
 mode_overrides_title = false
 mode = 0
 access = 1
+filters = PoolStringArray( "*.gdshader", "*.shader" )
 show_hidden_files = true
 current_dir = "user://media/jr/Mnemonic Courier/godot/_src/BookOfShaders-Godot"
 current_path = "user://media/jr/Mnemonic Courier/godot/_src/BookOfShaders-Godot/"
@@ -249,7 +250,7 @@ theme = ExtResource( 5 )
 window_title = "Create Shader"
 mode_overrides_title = false
 access = 1
-filters = PoolStringArray( "*.shader" )
+filters = PoolStringArray( "*.gdshader", "*.shader" )
 show_hidden_files = true
 current_dir = "user://shaders"
 current_path = "user://shaders/"
