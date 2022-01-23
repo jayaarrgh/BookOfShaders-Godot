@@ -1,13 +1,26 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=14 format=2]
 
-[ext_resource path="res://BookOfShaders.gd" type="Script" id=1]
-[ext_resource path="res://DarkTheme.tres" type="Theme" id=2]
-[ext_resource path="res://shaders/chapter_12/2d-voronoise.shader" type="Shader" id=3]
-[ext_resource path="res://Inconsolata.otf" type="DynamicFontData" id=4]
-[ext_resource path="res://TextEdit.gd" type="Script" id=5]
+[ext_resource path="res://scripts/BookOfShaders.gd" type="Script" id=1]
+[ext_resource path="res://scripts/TextEdit.gd" type="Script" id=2]
+[ext_resource path="res://Inconsolata.otf" type="DynamicFontData" id=3]
+[ext_resource path="res://shaders/chapter_12/2d-voronoise.shader" type="Shader" id=4]
+[ext_resource path="res://DarkTheme.tres" type="Theme" id=5]
+[ext_resource path="res://shaders/3D/3DTest.gdshader" type="Shader" id=6]
+[ext_resource path="res://scripts/Camera.gd" type="Script" id=7]
+
+[sub_resource type="CubeMesh" id=3]
+
+[sub_resource type="ShaderMaterial" id=8]
+shader = ExtResource( 6 )
+
+[sub_resource type="ProceduralSky" id=6]
+
+[sub_resource type="Environment" id=7]
+background_mode = 2
+background_sky = SubResource( 6 )
 
 [sub_resource type="ShaderMaterial" id=1]
-shader = ExtResource( 3 )
+shader = ExtResource( 4 )
 shader_param/mouse_position = null
 
 [sub_resource type="DynamicFont" id=2]
@@ -18,9 +31,31 @@ use_filter = true
 extra_spacing_top = -2
 extra_spacing_bottom = -2
 extra_spacing_space = -1
-font_data = ExtResource( 4 )
+font_data = ExtResource( 3 )
 
-[node name="Main" type="Control"]
+[node name="Main" type="Node"]
+
+[node name="3D" type="Spatial" parent="."]
+
+[node name="MeshInstance" type="MeshInstance" parent="3D"]
+mesh = SubResource( 3 )
+material/0 = SubResource( 8 )
+
+[node name="GimbleY" type="Spatial" parent="3D"]
+transform = Transform( 0.607431, 0, 0.794372, 0, 1, 0, -0.794372, 0, 0.607431, 0, 0, 0 )
+script = ExtResource( 7 )
+
+[node name="GimbleX" type="Spatial" parent="3D/GimbleY"]
+transform = Transform( 1, 0, 0, 0, 0.918412, 0.395626, 0, -0.395626, 0.918412, 0, 0, 0 )
+
+[node name="Camera" type="Camera" parent="3D/GimbleY/GimbleX"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4 )
+current = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="3D"]
+environment = SubResource( 7 )
+
+[node name="UI" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
@@ -28,7 +63,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="UI"]
 material = SubResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -38,12 +73,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextEdit" type="TextEdit" parent="."]
+[node name="TextEdit" type="TextEdit" parent="UI"]
 anchor_right = 0.5
 anchor_bottom = 1.0
 focus_mode = 1
-theme = ExtResource( 2 )
-custom_fonts/font = SubResource( 2 )
+theme = ExtResource( 5 )
 custom_colors/member_variable_color = Color( 0.909804, 0.172549, 0.152941, 1 )
 custom_colors/function_color = Color( 0.580392, 0.737255, 0.321569, 1 )
 custom_colors/symbol_color = Color( 0.92549, 0.541176, 0.0470588, 1 )
@@ -53,6 +87,7 @@ custom_colors/line_number_color = Color( 1, 1, 1, 0.521569 )
 custom_colors/number_color = Color( 0.988235, 0.623529, 0.843137, 1 )
 custom_colors/brace_mismatch_color = Color( 1, 0, 0, 1 )
 custom_colors/current_line_color = Color( 0.921569, 0.921569, 0.921569, 0.0980392 )
+custom_fonts/font = SubResource( 2 )
 text = "shader_type canvas_item;
 
 // Created by inigo quilez - iq/2013
@@ -110,32 +145,32 @@ smooth_scrolling = true
 minimap_draw = true
 caret_block_mode = true
 caret_blink = true
-script = ExtResource( 5 )
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SwitchShader" type="Button" parent="."]
+[node name="SwitchShader" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -105.097
 margin_top = 4.16963
 margin_right = -5.09619
 margin_bottom = 26.1696
-theme = ExtResource( 2 )
+theme = ExtResource( 5 )
 text = "Switch Shader"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CodeToggle" type="Button" parent="."]
+[node name="CodeToggle" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -188.917
 margin_top = 4.19305
 margin_right = -109.917
 margin_bottom = 26.1931
-theme = ExtResource( 2 )
+theme = ExtResource( 5 )
 toggle_mode = true
 shortcut_in_tooltip = false
 pressed = true
@@ -144,70 +179,89 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Reset" type="Button" parent="."]
+[node name="Reset" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -241.921
 margin_top = 4.3079
 margin_right = -193.921
 margin_bottom = 26.3079
-theme = ExtResource( 2 )
+theme = ExtResource( 5 )
 text = "Reset"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NewShader" type="Button" parent="."]
+[node name="NewShader" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -333.808
 margin_top = 3.99564
 margin_right = -246.808
 margin_bottom = 25.9956
-theme = ExtResource( 2 )
+theme = ExtResource( 5 )
 text = "New Shader"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FileDialog" type="FileDialog" parent="."]
+[node name="2D3D" type="Button" parent="UI"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -374.0
+margin_top = 4.0
+margin_right = -340.0
+margin_bottom = 26.0
+theme = ExtResource( 5 )
+shortcut_in_tooltip = false
+text = "2D"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileDialog" type="FileDialog" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -297.263
 margin_right = 2.73682
 margin_bottom = 437.0
 rect_pivot_offset = Vector2( 299.856, -0.0221341 )
-theme = ExtResource( 2 )
+theme = ExtResource( 5 )
 window_title = "Pick A Shader"
 mode_overrides_title = false
 mode = 0
 access = 1
-current_dir = "user://media/jr/Mnemonic Courier/godot/_src/bos-godot"
-current_path = "user://media/jr/Mnemonic Courier/godot/_src/bos-godot/"
+filters = PoolStringArray( "*.gdshader", "*.shader" )
+show_hidden_files = true
+current_dir = "user://media/jr/Mnemonic Courier/godot/_src/BookOfShaders-Godot"
+current_path = "user://media/jr/Mnemonic Courier/godot/_src/BookOfShaders-Godot/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NewShaderDialog" type="FileDialog" parent="."]
+[node name="NewShaderDialog" type="FileDialog" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -349.802
 margin_top = 55.7754
 margin_right = -6.80188
 margin_bottom = 466.775
-theme = ExtResource( 2 )
+theme = ExtResource( 5 )
 window_title = "Create Shader"
 mode_overrides_title = false
 access = 1
-filters = PoolStringArray( "*.shader" )
+filters = PoolStringArray( "*.gdshader", "*.shader" )
+show_hidden_files = true
 current_dir = "user://shaders"
 current_path = "user://shaders/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="pressed" from="SwitchShader" to="." method="_on_SwitchShader_pressed"]
-[connection signal="toggled" from="CodeToggle" to="." method="_on_CodeToggle_toggled"]
-[connection signal="pressed" from="Reset" to="." method="_on_Reset_pressed"]
-[connection signal="pressed" from="NewShader" to="." method="_on_NewShader_pressed"]
-[connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
-[connection signal="file_selected" from="NewShaderDialog" to="." method="_on_NewShaderDialog_file_selected"]
+
+[connection signal="pressed" from="UI/SwitchShader" to="UI" method="_on_SwitchShader_pressed"]
+[connection signal="toggled" from="UI/CodeToggle" to="UI" method="_on_CodeToggle_toggled"]
+[connection signal="pressed" from="UI/Reset" to="UI" method="_on_Reset_pressed"]
+[connection signal="pressed" from="UI/NewShader" to="UI" method="_on_NewShader_pressed"]
+[connection signal="button_up" from="UI/2D3D" to="UI" method="_on_2D3D_button_up"]
+[connection signal="file_selected" from="UI/FileDialog" to="UI" method="_on_FileDialog_file_selected"]
+[connection signal="file_selected" from="UI/NewShaderDialog" to="UI" method="_on_NewShaderDialog_file_selected"]
