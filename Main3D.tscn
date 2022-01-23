@@ -1,0 +1,246 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://BookOfShaders3D.gd" type="Script" id=1]
+[ext_resource path="res://TextEdit.gd" type="Script" id=2]
+[ext_resource path="res://Inconsolata.otf" type="DynamicFontData" id=3]
+[ext_resource path="res://shaders/chapter_12/2d-voronoise.shader" type="Shader" id=4]
+[ext_resource path="res://DarkTheme.tres" type="Theme" id=5]
+[ext_resource path="res://shaders/3D/3DTest.material" type="Material" id=6]
+[ext_resource path="res://Camera.gd" type="Script" id=7]
+
+[sub_resource type="CubeMesh" id=3]
+
+[sub_resource type="ProceduralSky" id=6]
+
+[sub_resource type="Environment" id=7]
+background_mode = 2
+background_sky = SubResource( 6 )
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 4 )
+shader_param/mouse_position = null
+
+[sub_resource type="DynamicFont" id=2]
+size = 14
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_top = -2
+extra_spacing_bottom = -2
+extra_spacing_space = -1
+font_data = ExtResource( 3 )
+
+[node name="Main3D" type="Spatial"]
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+mesh = SubResource( 3 )
+material/0 = ExtResource( 6 )
+
+[node name="GimbleY" type="Spatial" parent="."]
+transform = Transform( 0.607431, 0, 0.794372, 0, 1, 0, -0.794372, 0, 0.607431, 0, 0, 0 )
+script = ExtResource( 7 )
+
+[node name="GimbleX" type="Spatial" parent="GimbleY"]
+transform = Transform( 1, 0, 0, 0, 0.918412, 0.395626, 0, -0.395626, 0.918412, 0, 0, 0 )
+
+[node name="Camera" type="Camera" parent="GimbleY/GimbleX"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4 )
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 7 )
+
+[node name="Main" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="Main"]
+visible = false
+material = SubResource( 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+focus_mode = 1
+color = Color( 0.305882, 0.286275, 0.286275, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextEdit" type="TextEdit" parent="Main"]
+anchor_right = 0.5
+anchor_bottom = 1.0
+focus_mode = 1
+theme = ExtResource( 5 )
+custom_colors/member_variable_color = Color( 0.909804, 0.172549, 0.152941, 1 )
+custom_colors/function_color = Color( 0.580392, 0.737255, 0.321569, 1 )
+custom_colors/symbol_color = Color( 0.92549, 0.541176, 0.0470588, 1 )
+custom_colors/caret_background_color = Color( 0.929412, 0.0235294, 0.0235294, 1 )
+custom_colors/caret_color = Color( 0, 1, 0.533333, 1 )
+custom_colors/line_number_color = Color( 1, 1, 1, 0.521569 )
+custom_colors/number_color = Color( 0.988235, 0.623529, 0.843137, 1 )
+custom_colors/brace_mismatch_color = Color( 1, 0, 0, 1 )
+custom_colors/current_line_color = Color( 0.921569, 0.921569, 0.921569, 0.0980392 )
+custom_fonts/font = SubResource( 2 )
+text = "shader_type canvas_item;
+
+// Created by inigo quilez - iq/2013
+// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+// http://iquilezles.org/www/articles/voronoise/voronoise.htm
+
+uniform vec2 mouse_position;
+
+vec3 hash3( vec2 p ) {
+    vec3 q = vec3( dot(p,vec2(127.1,311.7)),
+                   dot(p,vec2(269.5,183.3)),
+                   dot(p,vec2(419.2,371.9)) );
+    return fract(sin(q)*43758.5453);
+}
+
+float iqnoise( in vec2 x, float u, float v ) {
+    vec2 p = floor(x);
+    vec2 f = fract(x);
+
+    float k = 1.0+63.0*pow(1.0-v,4.0);
+
+    float va = 0.0;
+    float wt = 0.0;
+    for (int j=-2; j<=2; j++) {
+        for (int i=-2; i<=2; i++) {
+            vec2 g = vec2(float(i),float(j));
+            vec3 o = hash3(p + g)*vec3(u,u,1.0);
+            vec2 r = g - f + o.xy;
+            float d = dot(r,r);
+            float ww = pow( 1.0-smoothstep(0.0,1.414,sqrt(d)), k );
+            va += o.z*ww;
+            wt += ww;
+        }
+    }
+
+    return va/wt;
+}
+
+void fragment() {
+	vec2 res = 1.0/SCREEN_PIXEL_SIZE;
+	vec2 st = FRAGCOORD.xy/res.xy;
+    st.x *= res.x/res.y;
+    vec3 color = vec3(0.0);
+
+    st *= 10.;
+    float n = iqnoise(st, mouse_position.x/res.x, mouse_position.y/res.y);
+
+    COLOR = vec4(vec3(n),1.0);
+}
+"
+highlight_current_line = true
+syntax_highlighting = true
+show_line_numbers = true
+smooth_scrolling = true
+minimap_draw = true
+caret_block_mode = true
+caret_blink = true
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SwitchShader" type="Button" parent="Main"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -105.097
+margin_top = 4.16963
+margin_right = -5.09619
+margin_bottom = 26.1696
+theme = ExtResource( 5 )
+text = "Switch Shader"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CodeToggle" type="Button" parent="Main"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -188.917
+margin_top = 4.19305
+margin_right = -109.917
+margin_bottom = 26.1931
+theme = ExtResource( 5 )
+toggle_mode = true
+shortcut_in_tooltip = false
+pressed = true
+text = "Edit Code"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Reset" type="Button" parent="Main"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -241.921
+margin_top = 4.3079
+margin_right = -193.921
+margin_bottom = 26.3079
+theme = ExtResource( 5 )
+text = "Reset"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NewShader" type="Button" parent="Main"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -333.808
+margin_top = 3.99564
+margin_right = -246.808
+margin_bottom = 25.9956
+theme = ExtResource( 5 )
+text = "New Shader"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileDialog" type="FileDialog" parent="Main"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -297.263
+margin_right = 2.73682
+margin_bottom = 437.0
+rect_pivot_offset = Vector2( 299.856, -0.0221341 )
+theme = ExtResource( 5 )
+window_title = "Pick A Shader"
+mode_overrides_title = false
+mode = 0
+access = 1
+show_hidden_files = true
+current_dir = "user://media/jr/Mnemonic Courier/godot/_src/BookOfShaders-Godot"
+current_path = "user://media/jr/Mnemonic Courier/godot/_src/BookOfShaders-Godot/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NewShaderDialog" type="FileDialog" parent="Main"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -349.802
+margin_top = 55.7754
+margin_right = -6.80188
+margin_bottom = 466.775
+theme = ExtResource( 5 )
+window_title = "Create Shader"
+mode_overrides_title = false
+access = 1
+filters = PoolStringArray( "*.shader" )
+show_hidden_files = true
+current_dir = "user://shaders"
+current_path = "user://shaders/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="Main/SwitchShader" to="Main" method="_on_SwitchShader_pressed"]
+[connection signal="toggled" from="Main/CodeToggle" to="Main" method="_on_CodeToggle_toggled"]
+[connection signal="pressed" from="Main/Reset" to="Main" method="_on_Reset_pressed"]
+[connection signal="pressed" from="Main/NewShader" to="Main" method="_on_NewShader_pressed"]
+[connection signal="file_selected" from="Main/FileDialog" to="Main" method="_on_FileDialog_file_selected"]
+[connection signal="file_selected" from="Main/NewShaderDialog" to="Main" method="_on_NewShaderDialog_file_selected"]
