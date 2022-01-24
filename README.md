@@ -9,6 +9,8 @@ Now featuring a 3D section for additional learning! Use middle mouse button clic
 
 [Migrate to Godot's Shading Language](https://docs.godotengine.org/en/stable/tutorials/shading/migrating_to_godot_shader_language.html#doc-migrating-to-godot-shader-language)
 
+Thanks to [Ezcha's gd-obj runtime importer](https://github.com/Ezcha/gd-obj)
+
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?business=L4GGSCN5YWVG2&no_recurring=0&item_name=Thanks+for+buying+me+a+coffee%21&currency_code=USD)
 
 ![](.gif/demo.gif)
