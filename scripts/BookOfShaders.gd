@@ -171,7 +171,7 @@ func _on_ImgDialog_file_selected(path):
 		return
 	var texture = ImageTexture.new()
 	texture.create_from_image(image)
-#	TODO: give texture the name from the path might need regex
+#	name = path.rsplit('/')[-1].rsplit('.')[0]
 #	TODO: save texture to user dir?? will the image be part of the texture??
 	target.set_shader_param("texture_albedo", texture)
 
