@@ -74,8 +74,7 @@ func _input(event):
 	if event is InputEventMouseMotion:
 		# send mouse movement to the shader - even if the shader doesn't have the param
 		target.set_shader_param('mouse_position', get_local_mouse_position())
-		print(target.get_shader_param('mouse_position'))
-		
+
 
 func _process(delta):
 	update_delta += delta
@@ -142,7 +141,7 @@ func _on_Reset_pressed():
 
 func _on_NewShaderDialog_file_selected(path):
 	# create new shader
-	if not path.ends_with('.gdshader') or not path.ends_with('.shader'): return
+	if not (path.ends_with('.gdshader') or path.ends_with('.shader')): return
 	current_shader_path = path
 	var new_shader = Shader.new()
 	new_shader.code = shader_template
@@ -191,9 +190,6 @@ func _on_MeshDialog_file_selected(path):
 	# loaded but broke our shader, needs the same material attached or something
 	if newMesh:
 		meshArray.append(newMesh)
-	
-	# set the target mesh mesh to the newMesh
-	# set the meshIndex to the end 
 	meshInst.set_mesh(newMesh)
 	meshIndex = meshArray.size() - 1
 
