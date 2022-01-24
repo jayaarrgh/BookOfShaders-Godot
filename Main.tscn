@@ -273,6 +273,7 @@ mode_overrides_title = false
 mode = 0
 access = 1
 filters = PoolStringArray( "*.gdshader", "*.shader" )
+show_hidden_files = false
 current_dir = "user://shaders"
 current_path = "user://shaders/"
 __meta__ = {
@@ -291,6 +292,7 @@ window_title = "Create Shader"
 mode_overrides_title = false
 access = 1
 filters = PoolStringArray( "*.gdshader", "*.shader" )
+show_hidden_files = false
 current_dir = "user://shaders"
 current_path = "user://shaders/"
 __meta__ = {
@@ -310,9 +312,9 @@ mode_overrides_title = false
 mode = 0
 access = 2
 filters = PoolStringArray( "*.obj" )
-current_dir = "/home/jr"
-current_file = "Desktop"
-current_path = "/home/jr/Desktop"
+show_hidden_files = false
+current_dir = "user://"
+current_path = "user://"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -330,9 +332,9 @@ mode_overrides_title = false
 mode = 0
 access = 2
 filters = PoolStringArray( "*.png", "*.jpg", "*.jpeg", "*.bmp" )
-current_dir = "/home/jr"
-current_file = "Desktop"
-current_path = "/home/jr/Desktop"
+show_hidden_files = false
+current_dir = "user://"
+current_path = "user://"
 __meta__ = {
 "_edit_use_anchors_": false
 }
