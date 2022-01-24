@@ -27,6 +27,22 @@ static func copy_recursive(from, to):
 		print("Error copying " + from + " to " + to)
 
 
+static func load_files(from):
+	var directory = Directory.new()
+	var files = []
+	# Open directory
+	var error = directory.open(from)
+	if error == OK:
+		# List directory content
+		directory.list_dir_begin(true)
+		var file_name = directory.get_next()
+		while file_name != "":
+			files.append(file_name)
+			file_name = directory.get_next()
+	else:
+		print("Error reading from " + from)
+	return files
+
 # unused directory helpers
 
 

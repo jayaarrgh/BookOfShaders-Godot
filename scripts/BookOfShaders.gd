@@ -25,12 +25,7 @@ onready var main3d    : Spatial      = $"../3D"
 onready var meshInst  : MeshInstance = $"../3D/MeshInstance"
 onready var meshMat   : Material     = $"../3D/MeshInstance".get_surface_material(0)
 onready var dimension : Button       = $"2D3D"
-onready var meshArray = [
-	preload("res://mesh/cube.tres"),
-	preload("res://mesh/sphere.tres"),
-	preload("res://mesh/suzanne.mesh"),
-	preload("res://mesh/teapot.mesh")
-]
+
 
 
 # STATE
@@ -45,6 +40,7 @@ var save_shader
 var update_delta = 0.0
 var save_delta = 0.0
 var meshIndex = 0
+var meshArray = []
 
 
 func _ready():
@@ -52,6 +48,15 @@ func _ready():
 	target = rectMat
 	# res is not editable outside of editor - move res shaders to user directory
 	Util.copy_recursive(res_shader_dir, user_shader_dir)
+	Util.copy_recursive("res://mesh/", "user://mesh/")
+	
+	# Get everything from the user/mesh dir and load it into the meshArray
+	# get files in directior
+	var mesh_files = Util.load_files("user://mesh/")
+	for mesh_file in mesh_files:
+		print(mesh_file)
+		meshArray.append(load("user://mesh/"+mesh_file))
+	
 	# set the current shader path to the new or existing user path now
 	current_shader_path = target.shader.get_path().replace('res://', 'user://')
 	target.shader = load(current_shader_path)
@@ -172,6 +177,8 @@ func _on_2D3D_button_up():
 		user_shader_dir = USER_SHADER_DIR_2D
 		colorRect.show()
 		main3d.hide()
+		$ImportMesh.hide()
+		$SwitchMesh.hide()
 	else:
 		dimension.text = "2D"
 		target = meshMat
@@ -181,6 +188,8 @@ func _on_2D3D_button_up():
 		user_shader_dir = USER_SHADER_DIR_3D
 		main3d.show()
 		colorRect.hide()
+		$ImportMesh.show()
+		$SwitchMesh.show()
 	
 	update_delta = 0.0
 	save_delta = 0.0
@@ -192,3 +201,53 @@ func _on_2D3D_button_up():
 	textEdit.text = target.shader.code
 	self.set_process(true)
 
+
+
+### New mesh imported functionality
+
+
+func _on_ImportMesh_pressed():
+	$MeshDialog.popup()
+
+
+func _on_MeshDialog_file_selected(path):
+	print('got path from mesh dialog, attempting import')
+	var newMesh = ObjParse.parse_obj(path) # only grab one mesh, one surface
+#	take the end of the path?
+	var meshName = path.rsplit("/")[-1]
+	meshName = meshName.rsplit(".obj")[0]
+	print(newMesh)
+	var _e = ResourceSaver.save("user://mesh/"+meshName+".mesh", newMesh)
+	if _e != OK:
+		print('something went wrong when trying to save shader')
+		return
+	
+	# loaded but broke our shader, needs the same material attached or something
+	if newMesh:
+		meshArray.append(newMesh)
+	
+	# set the target mesh mesh to the newMesh
+	# set the meshIndex to the end 
+	meshInst.set_mesh(newMesh)
+	meshIndex = meshArray.size() - 1
+
+
+func _on_ImportImg_pressed():
+	$ImgDialog.popup()
+#	pass # Replace with function body.
+
+
+func _on_ImgDialog_file_selected(path):
+	var image = Image.new()
+	var error = image.load(path)
+	if error != OK:
+		print('ERROR loading image')
+		return
+	var texture = ImageTexture.new()
+	texture.create_from_image(image)
+
+#	give texture the name from the path might need regex
+#	currentTexture = texture
+	# save texture to user dir?? will the image be part of the texture??
+	target.set_shader_param("albedo_texture", texture)
+	# this applied in 2d and 3d??

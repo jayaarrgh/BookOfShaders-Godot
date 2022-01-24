@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "ObjParse",
+"language": "GDScript",
+"path": "res://scripts/ObjParse.gd"
+}, {
 "base": "Object",
 "class": "Util",
 "language": "GDScript",
 "path": "res://scripts/Util.gd"
 } ]
 _global_script_class_icons={
+"ObjParse": "",
 "Util": ""
 }
 
