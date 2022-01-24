@@ -131,7 +131,7 @@ func _on_Reset_pressed():
 	# overwrite user data with res version
 	var resource_version = current_shader_path.replace('user://', 'res://')
 	var resource_shader = load(resource_version)
-	if not resource_shader:
+	if not resource_shader or resource_shader.code == "":
 		print('Could not find original resource shader')
 		return
 	textEdit.text = resource_shader.code
