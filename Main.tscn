@@ -7,8 +7,7 @@
 [ext_resource path="res://DarkTheme.tres" type="Theme" id=5]
 [ext_resource path="res://shaders/3D/3DTest.gdshader" type="Shader" id=6]
 [ext_resource path="res://scripts/Camera.gd" type="Script" id=7]
-
-[sub_resource type="CubeMesh" id=3]
+[ext_resource path="res://mesh/cube.tres" type="CubeMesh" id=8]
 
 [sub_resource type="ShaderMaterial" id=8]
 shader = ExtResource( 6 )
@@ -38,11 +37,11 @@ font_data = ExtResource( 3 )
 [node name="3D" type="Spatial" parent="."]
 
 [node name="MeshInstance" type="MeshInstance" parent="3D"]
-mesh = SubResource( 3 )
+mesh = ExtResource( 8 )
 material/0 = SubResource( 8 )
 
 [node name="GimbleY" type="Spatial" parent="3D"]
-transform = Transform( 0.607431, 0, 0.794372, 0, 1, 0, -0.794372, 0, 0.607431, 0, 0, 0 )
+transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 0, 0, 0 )
 script = ExtResource( 7 )
 
 [node name="GimbleX" type="Spatial" parent="3D/GimbleY"]
@@ -163,6 +162,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="SwitchMesh" type="Button" parent="UI"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -105.097
+margin_top = 33.0
+margin_right = -5.09619
+margin_bottom = 55.0
+theme = ExtResource( 5 )
+text = "Switch Mesh"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="CodeToggle" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
@@ -259,6 +271,7 @@ __meta__ = {
 }
 
 [connection signal="pressed" from="UI/SwitchShader" to="UI" method="_on_SwitchShader_pressed"]
+[connection signal="pressed" from="UI/SwitchMesh" to="UI" method="_on_SwitchMesh_pressed"]
 [connection signal="toggled" from="UI/CodeToggle" to="UI" method="_on_CodeToggle_toggled"]
 [connection signal="pressed" from="UI/Reset" to="UI" method="_on_Reset_pressed"]
 [connection signal="pressed" from="UI/NewShader" to="UI" method="_on_NewShader_pressed"]

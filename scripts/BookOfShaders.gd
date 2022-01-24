@@ -18,12 +18,19 @@ const UPDATE_SHADER_3D   : float = 1.0 # update shader every 1s
 const SAVE_SHADER_3D     : float = 4.0 # save every 4s
 
 
-onready var textEdit  : TextEdit  = $TextEdit
-onready var colorRect : ColorRect = $ColorRect
-onready var rectMat   : Material  = colorRect.material
-onready var main3d    : Spatial   = $"../3D"
-onready var meshMat   : Material  = $"../3D/MeshInstance".get_surface_material(0)
-onready var dimension : Button    = $"2D3D"
+onready var textEdit  : TextEdit     = $TextEdit
+onready var colorRect : ColorRect    = $ColorRect
+onready var rectMat   : Material     = colorRect.material
+onready var main3d    : Spatial      = $"../3D"
+onready var meshInst  : MeshInstance = $"../3D/MeshInstance"
+onready var meshMat   : Material     = $"../3D/MeshInstance".get_surface_material(0)
+onready var dimension : Button       = $"2D3D"
+onready var meshArray = [
+	preload("res://mesh/cube.tres"),
+	preload("res://mesh/sphere.tres"),
+	preload("res://mesh/suzanne.mesh"),
+	preload("res://mesh/teapot.mesh")
+]
 
 
 # STATE
@@ -37,6 +44,7 @@ var update_shader
 var save_shader
 var update_delta = 0.0
 var save_delta = 0.0
+var meshIndex = 0
 
 
 func _ready():
@@ -97,6 +105,17 @@ func _on_NewShader_pressed():
 
 func _on_SwitchShader_pressed():
 	$FileDialog.popup()
+
+
+func _on_SwitchMesh_pressed():
+	# TODO: this button should be hidden in 2d canvas mode
+	var sz = meshArray.size()
+	meshIndex += 1
+	if meshIndex >= sz:
+		meshIndex = 0
+	meshInst.set_mesh(meshArray[meshIndex])
+	pass # Replace with function body.
+
 
 
 func _on_CodeToggle_toggled(_button_pressed):
@@ -172,3 +191,4 @@ func _on_2D3D_button_up():
 	current_shader_path = target.shader.get_path().replace('res://', 'user://')
 	textEdit.text = target.shader.code
 	self.set_process(true)
+
