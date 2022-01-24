@@ -1,8 +1,7 @@
 extends Control
 
 
-# TODO: only swap 3d shader code when changes have been made
-
+# TODO: only swap 3d shader and save code when changes have been made to TextEdit 
 
 const RES_SHADER_DIR_2D  : String = "res://shaders"
 const USER_SHADER_DIR_2D : String = "user://shaders"
