@@ -152,11 +152,8 @@ func _on_FileDialog_file_selected(path):
 	# load the selected shader
 	current_shader_path = path
 	var shader = load(current_shader_path)
-	if not shader:
+	if not shader or not shader is Shader:
 		print('could not load resource')
-		return
-	if not shader is Shader:
-		print('that wasnt a shader')
 		return
 	textEdit.text = shader.code
 	target.set_shader(shader)
@@ -176,7 +173,6 @@ func _on_ImgDialog_file_selected(path):
 
 
 func _on_MeshDialog_file_selected(path):
-	print('got path from mesh dialog, attempting import')
 	var newMesh = ObjParse.parse_obj(path) # only grab one mesh, one surface
 	var meshName = path.rsplit("/")[-1]
 	meshName = meshName.rsplit(".obj")[0]
@@ -184,8 +180,6 @@ func _on_MeshDialog_file_selected(path):
 	if _e != OK:
 		print('something went wrong when trying to save shader')
 		return
-	
-	# loaded but broke our shader, needs the same material attached or something
 	if newMesh:
 		meshArray.append(newMesh)
 	meshInst.set_mesh(newMesh)
