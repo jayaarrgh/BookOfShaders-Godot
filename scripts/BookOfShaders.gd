@@ -249,5 +249,5 @@ func _on_ImgDialog_file_selected(path):
 #	give texture the name from the path might need regex
 #	currentTexture = texture
 	# save texture to user dir?? will the image be part of the texture??
-	target.set_shader_param("albedo_texture", texture)
+	target.set_shader_param("texture_albedo", texture)
 	# this applied in 2d and 3d??
