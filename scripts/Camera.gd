@@ -15,12 +15,13 @@ var shift_pressed = false
 # use unhandled input for zoom, so scrolling in menus does not effect 3d view	
 func _unhandled_input(event):
 	if event is InputEventMouseButton:
-		# need to be ignored or captured by UI first
 		if event.button_index == BUTTON_WHEEL_UP:
 			camera.translate_object_local(Vector3(0.0, 0.0, -ZOOM_STEP))
 		if event.button_index == BUTTON_WHEEL_DOWN:
 			camera.translate_object_local(Vector3(0.0, 0.0, ZOOM_STEP))
-
+		# limit camera zoom in to center (for inside cull_front shader)
+		if camera.translation.z <= 0:
+			camera.translation.z = 0
 
 func _input(event):
 	if event is InputEventMouseButton:
