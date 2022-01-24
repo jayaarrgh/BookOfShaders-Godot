@@ -43,20 +43,19 @@ static func load_files(from):
 		print("Error reading from " + from)
 	return files
 
-# unused directory helpers
+#### unused directory helpers
 
-
-#func recursive_dirs_and_files_dict(dir, data):
+#static func recursive_dirs_and_files_dict(dir, data):
 #	var file_name = dir.get_next()
-##
+#
 #	while (file_name != ""):
 #		var path = dir.get_current_dir() + "/" + file_name
-#		var _user_path = path.replace('res://', 'user://')
+##		var _user_path = path.replace('res://', 'user://')
 #		if dir.current_is_dir():
 ##			print("Found directory: %s" % path)
 #			var subDir = Directory.new()
 #			subDir.open(path)
-#			subDir.list_dir_begin(true, false)
+#			subDir.list_dir_begin(true, true)
 #			data[path] = []
 #			recursive_dirs_and_files_dict(subDir, data)
 #		else:
@@ -70,11 +69,11 @@ static func load_files(from):
 #	return data
 #
 #
-#func get_dirs_and_files_dict():
+#static func get_dirs_and_files_dict(path):
 #	var dir = Directory.new()
 #	var data = {}
-#	if dir.open(shaders_dir) == OK:
-#		dir.list_dir_begin(true, false)
+#	if dir.open(path) == OK:
+#		dir.list_dir_begin(true, true)
 #		data = recursive_dirs_and_files_dict(dir, data)
 #	return data
 #
