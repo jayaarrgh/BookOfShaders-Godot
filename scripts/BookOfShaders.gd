@@ -1,21 +1,20 @@
 extends Control
 
-# TODO: in 3d mode show more options
-	# Switch target mesh to sphere, suzanne, teapot, etc, and swap the material shader
+
 # TODO: only swap 3d shader code when changes have been made
-# TODO: Allow applying texture to shader uniform
+
 
 const RES_SHADER_DIR_2D  : String = "res://shaders"
 const USER_SHADER_DIR_2D : String = "user://shaders"
 const SHADER_TEMPLATE_2D : String = "shader_type canvas_item;\n\nvoid fragment(){\n\tCOLOR = vec4(vec3(0.0,0.5,0.3), 1.);\n}"
 const RES_SHADER_DIR_3D  : String = "res://shaders/3D/"
 const USER_SHADER_DIR_3D : String = "user://shaders/3D/"
-const SHADER_TEMPLATE_3D : String = "shader_type spatial;\nrender_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;\n//TODO: Accept a texture in our editor\n//uniform sampler2D texture_albedo : hint_albedo;\n\nvarying smooth vec3 our_color;\n//varying flat vec3 our_color;\n\nvoid vertex() {\n	our_color = VERTEX;\n}\n\n\nvoid fragment() {\n	ALBEDO = our_color.rgb;\n}\n"
+const SHADER_TEMPLATE_3D : String = "shader_type spatial;\nrender_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;\n\nuniform sampler2D texture_albedo : hint_albedo;\nuniform vec2 mouse_position;\n\nvarying smooth vec3 our_color;\n//varying flat vec3 our_color;\n\nvoid vertex() {\n	our_color = VERTEX;\n}\n\nvoid fragment() {\n	vec3 base = texture(texture_albedo, UV).rgb;\n	ALBEDO = mix(base, our_color.rgb, 0.5);\n}\n\n"
 const UPDATE_SHADER_2D   : float = 0.2 # update shader every 200ms
 const SAVE_SHADER_2D     : float = 2.0 # save every 2 seconds
 # update in 3d is a bit slower at Godot stutters when loading 3d shaders 
 const UPDATE_SHADER_3D   : float = 1.0 # update shader every 1s
-const SAVE_SHADER_3D     : float = 4.0 # save every 4s
+const SAVE_SHADER_3D     : float = 3.0 # save every 3s
 
 
 onready var textEdit  : TextEdit     = $TextEdit
@@ -25,7 +24,6 @@ onready var main3d    : Spatial      = $"../3D"
 onready var meshInst  : MeshInstance = $"../3D/MeshInstance"
 onready var meshMat   : Material     = $"../3D/MeshInstance".get_surface_material(0)
 onready var dimension : Button       = $"2D3D"
-
 
 
 # STATE
@@ -51,7 +49,6 @@ func _ready():
 	Util.copy_recursive("res://mesh/", "user://mesh/")
 	
 	# Get everything from the user/mesh dir and load it into the meshArray
-	# get files in directior
 	var mesh_files = Util.load_files("user://mesh/")
 	for mesh_file in mesh_files:
 		print(mesh_file)
@@ -73,11 +70,12 @@ func _ready():
 
 
 func _input(event):
-	if !mode2d: return
+#	if !mode2d: return
 	if event is InputEventMouseMotion:
 		# send mouse movement to the shader - even if the shader doesn't have the param
 		target.set_shader_param('mouse_position', get_local_mouse_position())
-
+		print(target.get_shader_param('mouse_position'))
+		
 
 func _process(delta):
 	update_delta += delta
@@ -107,20 +105,22 @@ func _save_shader():
 func _on_NewShader_pressed():
 	$NewShaderDialog.popup()
 
-
 func _on_SwitchShader_pressed():
 	$FileDialog.popup()
 
+func _on_ImportMesh_pressed():
+	$MeshDialog.popup()
+
+func _on_ImportImg_pressed():
+	$ImgDialog.popup()
+
 
 func _on_SwitchMesh_pressed():
-	# TODO: this button should be hidden in 2d canvas mode
 	var sz = meshArray.size()
 	meshIndex += 1
 	if meshIndex >= sz:
 		meshIndex = 0
 	meshInst.set_mesh(meshArray[meshIndex])
-	pass # Replace with function body.
-
 
 
 func _on_CodeToggle_toggled(_button_pressed):
@@ -165,7 +165,41 @@ func _on_FileDialog_file_selected(path):
 	target.set_shader(shader)
 
 
+func _on_ImgDialog_file_selected(path):
+	var image = Image.new()
+	var error = image.load(path)
+	if error != OK:
+		print('ERROR loading image')
+		return
+	var texture = ImageTexture.new()
+	texture.create_from_image(image)
+#	TODO: give texture the name from the path might need regex
+#	TODO: save texture to user dir?? will the image be part of the texture??
+	target.set_shader_param("texture_albedo", texture)
+
+
+func _on_MeshDialog_file_selected(path):
+	print('got path from mesh dialog, attempting import')
+	var newMesh = ObjParse.parse_obj(path) # only grab one mesh, one surface
+	var meshName = path.rsplit("/")[-1]
+	meshName = meshName.rsplit(".obj")[0]
+	var _e = ResourceSaver.save("user://mesh/"+meshName+".mesh", newMesh)
+	if _e != OK:
+		print('something went wrong when trying to save shader')
+		return
+	
+	# loaded but broke our shader, needs the same material attached or something
+	if newMesh:
+		meshArray.append(newMesh)
+	
+	# set the target mesh mesh to the newMesh
+	# set the meshIndex to the end 
+	meshInst.set_mesh(newMesh)
+	meshIndex = meshArray.size() - 1
+
+
 func _on_2D3D_button_up():
+	# switches from 2d to 3d mode
 	self.set_process(false)
 	mode2d = !mode2d
 	if mode2d:
@@ -200,54 +234,3 @@ func _on_2D3D_button_up():
 	current_shader_path = target.shader.get_path().replace('res://', 'user://')
 	textEdit.text = target.shader.code
 	self.set_process(true)
-
-
-
-### New mesh imported functionality
-
-
-func _on_ImportMesh_pressed():
-	$MeshDialog.popup()
-
-
-func _on_MeshDialog_file_selected(path):
-	print('got path from mesh dialog, attempting import')
-	var newMesh = ObjParse.parse_obj(path) # only grab one mesh, one surface
-#	take the end of the path?
-	var meshName = path.rsplit("/")[-1]
-	meshName = meshName.rsplit(".obj")[0]
-	print(newMesh)
-	var _e = ResourceSaver.save("user://mesh/"+meshName+".mesh", newMesh)
-	if _e != OK:
-		print('something went wrong when trying to save shader')
-		return
-	
-	# loaded but broke our shader, needs the same material attached or something
-	if newMesh:
-		meshArray.append(newMesh)
-	
-	# set the target mesh mesh to the newMesh
-	# set the meshIndex to the end 
-	meshInst.set_mesh(newMesh)
-	meshIndex = meshArray.size() - 1
-
-
-func _on_ImportImg_pressed():
-	$ImgDialog.popup()
-#	pass # Replace with function body.
-
-
-func _on_ImgDialog_file_selected(path):
-	var image = Image.new()
-	var error = image.load(path)
-	if error != OK:
-		print('ERROR loading image')
-		return
-	var texture = ImageTexture.new()
-	texture.create_from_image(image)
-
-#	give texture the name from the path might need regex
-#	currentTexture = texture
-	# save texture to user dir?? will the image be part of the texture??
-	target.set_shader_param("texture_albedo", texture)
-	# this applied in 2d and 3d??
