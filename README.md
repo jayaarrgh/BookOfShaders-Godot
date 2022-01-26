@@ -34,34 +34,39 @@ Run the Main.tscn. Use the file dialog to switch shaders.
 
 
 ## Tips on Use
-The hideable text editor swaps the shader code every 200 ms, and saves the file every 3000ms.
-It does this less often in the 3D section, as saving and swaping shaders in 3d takes a bit longs and causes slight pauses in the renderer.
+- The hideable text editor swaps the shader code every 200 ms, and saves the file every 3000ms.
+It does this less often in the 3D section, as saving and swaping shaders in 3d causes slight pauses in the renderer.
 
-The 3D section can load 2d canvas shaders with strange results.
-All 3D shaders should go inside the shader folder.
+- Create new folders and new shader code in the `user://shaders` and `user://shaders/3D` directories.
 
-The reset button returns edited shaders to their default code.
+- The reset button returns edited shaders to their default code. This does nothing for your own created shaders.
 
-To reset all shaders to the default shader code, delete the shaders folder in the user directory and reopen the application. Copy any of your changes you want to maintain first of course.
+- All 3D shaders should go inside the shader/3D folder. The 3D section can load 2D canvas shaders with strange results.
 
-Create new folders and new shader code in the user directory.
+- You can use `uniform sampler2D texture;` in your shaders and import an image to use.
+This works in 2D and 3D. The images and textures are not saved between sessions.
 
-*WARNING*: Automatic saving during runtime will overwrite external editor changes.
+- You can import meshes in .obj format. All material and texture information is not kept. This only works with single surface meshes. The mesh data is stored for use between sessions.
+
+- To reset all shaders to the default shader code, delete the shaders folder in the user directory and reopen the application. This will delete any shaders you have created yourself. So copy any of your  you want to maintain first of course.
+  - *WARNING*: Automatic saving during runtime will overwrite external editor changes.
 If using an external text editor, this application should be closed first.
+  - User Directory
+  
+        Windows:
+            %APPDATA%\Godot\app_userdata\Project Name
 
-
-#### User Directory
-
-    Windows:
-        %APPDATA%\Godot\app_userdata\Project Name
-
-    On GNU/Linux: 
-        $HOME/.godot/app_userdata/Project Name
-        OR
-        $HOME/.local/share/godot/app_userdata/Project Name
+        On GNU/Linux: 
+            $HOME/.godot/app_userdata/Project Name
+            OR
+            $HOME/.local/share/godot/app_userdata/Project Name
 
 ## ChangeLog
 ### v2
 - Added 3d Mode
 - Used Godot 3.4 (from 3.2 in v1)
 - *.shader were renamed *.gdshader
+### v3
+- Added mesh swapping in 3D
+- Added import of meshes via .obj files
+- Added image support via `uniform sampler2D texture;` (2D and 3D)
