@@ -8,7 +8,7 @@ const USER_SHADER_DIR_2D : String = "user://shaders"
 const SHADER_TEMPLATE_2D : String = "shader_type canvas_item;\n\nvoid fragment(){\n\tCOLOR = vec4(vec3(0.0,0.5,0.3), 1.);\n}"
 const RES_SHADER_DIR_3D  : String = "res://shaders/3D/"
 const USER_SHADER_DIR_3D : String = "user://shaders/3D/"
-const SHADER_TEMPLATE_3D : String = "shader_type spatial;\nrender_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;\n\nuniform sampler2D texture_albedo : hint_albedo;\nuniform vec2 mouse_position;\n\nvarying smooth vec3 our_color;\n//varying flat vec3 our_color;\n\nvoid vertex() {\n	our_color = VERTEX;\n}\n\nvoid fragment() {\n	vec3 base = texture(texture_albedo, UV).rgb;\n	ALBEDO = mix(base, our_color.rgb, 0.5);\n}\n\n"
+const SHADER_TEMPLATE_3D : String = "shader_type spatial;\nrender_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;\n\nuniform sampler2D texture;\nuniform vec2 mouse_position;\n\nvarying smooth vec3 our_color;\n//varying flat vec3 our_color;\n\nvoid vertex() {\n	our_color = VERTEX;\n}\n\nvoid fragment() {\n	vec3 base = texture(texture, UV).rgb;\n	ALBEDO = mix(base, our_color.rgb, 0.5);\n}\n\n"
 const UPDATE_SHADER_2D   : float = 0.2 # update shader every 200ms
 const SAVE_SHADER_2D     : float = 2.0 # save every 2 seconds
 # update in 3d is a bit slower at Godot stutters when loading 3d shaders 
@@ -169,7 +169,7 @@ func _on_ImgDialog_file_selected(path):
 	texture.create_from_image(image)
 #	name = path.rsplit('/')[-1].rsplit('.')[0]
 #	TODO: save texture to user dir?? will the image be part of the texture??
-	target.set_shader_param("texture_albedo", texture)
+	target.set_shader_param("texture", texture)
 
 
 func _on_MeshDialog_file_selected(path):
