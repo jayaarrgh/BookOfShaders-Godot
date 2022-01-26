@@ -48,6 +48,8 @@ This works in 2D and 3D. The images and textures are not saved between sessions.
 
 - You can import meshes in .obj format. All material and texture information is not kept. This only works with single surface meshes. The mesh data is stored for use between sessions.
 
+- Rotate the 3D camera with middle mouse. Zoom in and out with middle mouse scroll. Shift and middle mouse to translate the camera.
+
 - To reset all shaders to the default shader code, delete the shaders folder in the user directory and reopen the application. This will delete any shaders you have created yourself. So copy any of your  you want to maintain first of course.
   - *WARNING*: Automatic saving during runtime will overwrite external editor changes.
 If using an external text editor, this application should be closed first.
