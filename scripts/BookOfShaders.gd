@@ -178,7 +178,7 @@ func _on_MeshDialog_file_selected(path):
 	meshName = meshName.rsplit(".obj")[0]
 	var _e = ResourceSaver.save("user://mesh/"+meshName+".mesh", newMesh)
 	if _e != OK:
-		print('something went wrong when trying to save shader')
+		print('something went wrong when trying to save mesh')
 		return
 	if newMesh:
 		meshArray.append(newMesh)
