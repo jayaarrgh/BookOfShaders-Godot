@@ -50,7 +50,6 @@ func _ready():
 	# Get everything from the user/mesh dir and load it into the meshArray
 	var mesh_files = Util.load_files("user://mesh/")
 	for mesh_file in mesh_files:
-		print(mesh_file)
 		meshArray.append(load("user://mesh/"+mesh_file))
 	
 	# set the current shader path to the new or existing user path now
@@ -96,7 +95,7 @@ func _save_shader():
 	var shader_to_save = target.shader
 	var _e = ResourceSaver.save(current_shader_path, shader_to_save)
 	if _e != OK:
-		print('something went wrong when trying to save shader')
+		print('ERROR: Failed to save shader')
 
 
 ## GUI CALLBACKS
@@ -131,7 +130,7 @@ func _on_Reset_pressed():
 	var resource_version = current_shader_path.replace('user://', 'res://')
 	var resource_shader = load(resource_version)
 	if not resource_shader or resource_shader.code == "":
-		print('Could not find original resource shader')
+		print('ERROR: Could not find original resource shader')
 		return
 	textEdit.text = resource_shader.code
 	target.shader.set_code(resource_shader.code)
@@ -154,7 +153,7 @@ func _on_FileDialog_file_selected(path):
 	current_shader_path = path
 	var shader = load(current_shader_path)
 	if not shader or not shader is Shader:
-		print('could not load resource')
+		print('ERROR: Failed to load shader')
 		return
 	textEdit.text = shader.code
 	target.set_shader(shader)
@@ -164,7 +163,7 @@ func _on_ImgDialog_file_selected(path):
 	var image = Image.new()
 	var error = image.load(path)
 	if error != OK:
-		print('ERROR loading image')
+		print('ERROR: Failed loading image')
 		return
 	var texture = ImageTexture.new()
 	texture.create_from_image(image)
@@ -179,7 +178,7 @@ func _on_MeshDialog_file_selected(path):
 	meshName = meshName.rsplit(".obj")[0]
 	var _e = ResourceSaver.save("user://mesh/"+meshName+".mesh", newMesh)
 	if _e != OK:
-		print('something went wrong when trying to save mesh')
+		print('ERROR: Failed to save mesh')
 		return
 	if newMesh:
 		meshArray.append(newMesh)
