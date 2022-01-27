@@ -234,6 +234,7 @@ __meta__ = {
 }
 
 [node name="SwitchMesh" type="Button" parent="UI"]
+visible = false
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -105.0
@@ -247,6 +248,7 @@ __meta__ = {
 }
 
 [node name="ImportMesh" type="Button" parent="UI"]
+visible = false
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -105.0
