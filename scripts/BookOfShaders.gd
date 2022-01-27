@@ -66,6 +66,7 @@ func _ready():
 	$NewShaderDialog.current_dir = user_shader_dir
 	$NewShaderDialog.current_path = user_shader_dir
 	$FileDialog.popup()
+	main3d.hide()
 
 
 func _input(event):
