@@ -23,8 +23,8 @@ onready var main3d    : Spatial      = $"../3D"
 onready var meshInst  : MeshInstance = $"../3D/MeshInstance"
 onready var meshMat   : Material     = $"../3D/MeshInstance".get_surface_material(0)
 onready var dimension : Button       = $"2D3D"
-onready var logLbl    : Label        = $TextEdit/Log
-onready var debugLbl  : Label        = $TextEdit/Debug
+onready var logLbl    : Label        = $Log
+onready var debugLbl  : Label        = $Debug
 
 # STATE
 var target # either a mesh or color rect depending on mode
