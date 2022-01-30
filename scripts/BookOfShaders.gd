@@ -94,7 +94,8 @@ func _copy_editor_shader_code():
 	_set_last_log()
 	logLbl.text = lastLog
 	if "null" in lastLog:
-		# hacky, but works to show debug log in editor and clear once shader is working
+		# why check substring "null"? it always apears in my tests of shader errors
+		# print hack, clear log once shader is working
 		print('                                                                                    ')
 
 func _save_shader():
