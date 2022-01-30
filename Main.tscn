@@ -194,6 +194,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="AutoLoadToggle" type="Button" parent="UI"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -277.0
+margin_top = 29.0
+margin_right = -198.0
+margin_bottom = 51.0
+theme = ExtResource( 5 )
+toggle_mode = true
+shortcut_in_tooltip = false
+pressed = true
+text = "Auto Load"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="SwitchShader" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
@@ -339,6 +355,7 @@ __meta__ = {
 [connection signal="button_up" from="UI/2D3D" to="UI" method="_on_2D3D_button_up"]
 [connection signal="pressed" from="UI/Reset" to="UI" method="_on_Reset_pressed"]
 [connection signal="toggled" from="UI/CodeToggle" to="UI" method="_on_CodeToggle_toggled"]
+[connection signal="toggled" from="UI/AutoLoadToggle" to="UI" method="_on_AutoLoadToggle_toggled"]
 [connection signal="pressed" from="UI/SwitchShader" to="UI" method="_on_SwitchShader_pressed"]
 [connection signal="pressed" from="UI/NewShader" to="UI" method="_on_NewShader_pressed"]
 [connection signal="pressed" from="UI/ImportImg" to="UI" method="_on_ImportImg_pressed"]

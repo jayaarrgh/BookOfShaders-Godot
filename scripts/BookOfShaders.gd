@@ -34,6 +34,7 @@ var shader_template = SHADER_TEMPLATE_2D
 var current_shader_path
 var update_shader
 var save_shader
+var hot_load_shader = true
 var update_delta = 0.0
 var save_delta = 0.0
 var meshIndex = 0
@@ -87,6 +88,7 @@ func _process(delta):
 
 func _copy_editor_shader_code():
 	if textEdit.text == "": return
+	if !hot_load_shader: return
 	target.shader.set_code(textEdit.text)
 
 
@@ -123,6 +125,10 @@ func _on_SwitchMesh_pressed():
 func _on_CodeToggle_toggled(_button_pressed):
 	if textEdit.is_visible_in_tree(): textEdit.hide()
 	else: textEdit.show()
+
+
+func _on_AutoLoadToggle_toggled(value):
+	hot_load_shader = value
 
 
 func _on_Reset_pressed():
@@ -222,3 +228,4 @@ func _on_2D3D_button_up():
 	current_shader_path = target.shader.get_path().replace('res://', 'user://')
 	textEdit.text = target.shader.code
 	self.set_process(true)
+
