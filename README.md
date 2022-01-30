@@ -80,4 +80,10 @@ If using an external text editor, this application should be closed first.
   - stdout/stderr are read from log file and set on a label if there are shader errors - no more need for a terminal output window!
 - FIX
   - saving new shaders
-  - resetting default shaders 
+  - resetting default shaders
+
+## Planned Features
+- 3d shader examples
+- More mesh import filetypes
+- swaping shader code only on text edits
+- port to godot 4.0 when its release (with new shader features!!!)
