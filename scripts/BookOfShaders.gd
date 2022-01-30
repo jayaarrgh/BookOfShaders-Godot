@@ -97,7 +97,7 @@ func _copy_editor_shader_code():
 	_set_last_log()
 	logLbl.text = lastLog
 	if "null" in lastLog:
-		# hacky as heck, but works to show debug log in editor and clear once its working
+		# hacky, but works to show debug log in editor and clear once shader is working
 		print('                                                                                    ')
 
 
@@ -105,11 +105,31 @@ func _save_shader():
 	# TODO: ? allow user to choose whether autosave happens?
 	var shader_to_save = target.shader
 	var _e = ResourceSaver.save(current_shader_path, shader_to_save)
+	# Not clearing debug label here as this is called too often - you may otherwise miss an errror 
+#	debugLbl.text = ""
 	if _e != OK:
 		debugLbl.text = 'ERROR: Failed to save shader'
+		return
 
 
-## GUI CALLBACKS
+func _set_last_log():
+	var file = File.new()
+	file.open("user://logs/godot.log", File.READ)
+	file.seek_end(-100)
+	lastLog = ""
+	lastLog += file.get_line()
+	lastLog += file.get_line()
+	file.close()
+	if not "null" in lastLog:
+		var f = File.new()
+		f.open("user://logs/godot.log", File.WRITE)
+		f.store_string(" ")
+		f.close()
+		lastLog = ""
+
+
+#### GUI CALLBACKS
+
 func _on_NewShader_pressed():
 	$NewShaderDialog.popup()
 
@@ -147,6 +167,7 @@ func _on_Reset_pressed():
 	if not resource_shader or resource_shader.code == "":
 		debugLbl.text = 'ERROR: Could not find original resource shader'
 		return
+	debugLbl.text = ""
 	textEdit.text = resource_shader.code
 	target.shader.set_code(resource_shader.code)
 	_save_shader()
@@ -170,6 +191,7 @@ func _on_FileDialog_file_selected(path):
 	if not shader or not shader is Shader:
 		debugLbl.text = 'ERROR: Failed to load shader'
 		return
+	debugLbl.text = ""
 	textEdit.text = shader.code
 	target.set_shader(shader)
 
@@ -180,6 +202,7 @@ func _on_ImgDialog_file_selected(path):
 	if error != OK:
 		debugLbl.text = 'ERROR: Failed loading image'
 		return
+	debugLbl.text = ""
 	var texture = ImageTexture.new()
 	texture.create_from_image(image)
 #	name = path.rsplit('/')[-1].rsplit('.')[0]
@@ -195,6 +218,7 @@ func _on_MeshDialog_file_selected(path):
 	if _e != OK:
 		debugLbl.text = 'ERROR: Failed to save mesh'
 		return
+	debugLbl.text = ""
 	if newMesh:
 		meshes.append(newMesh)
 	meshInst.set_mesh(newMesh)
@@ -228,6 +252,7 @@ func _on_2D3D_button_up():
 		$ImportMesh.show()
 		$SwitchMesh.show()
 	
+	debugLbl.text = ""
 	update_delta = 0.0
 	save_delta = 0.0
 	$FileDialog.current_dir = user_shader_dir
@@ -237,20 +262,3 @@ func _on_2D3D_button_up():
 	current_shader_path = target.shader.get_path().replace('res://', 'user://')
 	textEdit.text = target.shader.code
 	self.set_process(true)
-
-func _set_last_log():
-	var file = File.new()
-	file.open("user://logs/godot.log", File.READ)
-	file.seek_end(-100)
-	lastLog = ""
-	lastLog += file.get_line()
-	lastLog += file.get_line()
-	file.close()
-	if not "null" in lastLog:
-		var f = File.new()
-		f.open("user://logs/godot.log", File.WRITE)
-		f.store_string(" ")
-		f.close()
-		lastLog = ""
-		# hacky as hell but clears the log so we can clear it with this method...
-	file.close()
