@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scripts/BookOfShaders.gd" type="Script" id=1]
 [ext_resource path="res://scripts/TextEdit.gd" type="Script" id=2]
@@ -32,6 +32,9 @@ extra_spacing_top = -2
 extra_spacing_bottom = -2
 extra_spacing_space = -1
 font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 0, 0, 0, 0.615686 )
 
 [node name="Main" type="Node"]
 
@@ -350,6 +353,38 @@ current_dir = "/"
 current_path = "/"
 __meta__ = {
 "_edit_use_anchors_": false
+}
+
+[node name="Debug" type="Label" parent="UI"]
+anchor_left = 0.513
+anchor_top = 0.942
+anchor_right = 0.987
+anchor_bottom = 0.965
+margin_left = 0.359985
+margin_top = -0.240051
+margin_right = -0.360107
+margin_bottom = 0.199951
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_styles/normal = SubResource( 9 )
+align = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Log" type="Label" parent="UI"]
+anchor_left = 0.513
+anchor_top = 0.969
+anchor_right = 0.987
+anchor_bottom = 0.993
+margin_left = 0.359985
+margin_top = 0.319946
+margin_right = -0.360107
+margin_bottom = 0.039978
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_styles/normal = SubResource( 9 )
+align = 1
+__meta__ = {
+"_edit_use_anchors_": true
 }
 
 [connection signal="button_up" from="UI/2D3D" to="UI" method="_on_2D3D_button_up"]

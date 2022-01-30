@@ -23,7 +23,8 @@ onready var main3d    : Spatial      = $"../3D"
 onready var meshInst  : MeshInstance = $"../3D/MeshInstance"
 onready var meshMat   : Material     = $"../3D/MeshInstance".get_surface_material(0)
 onready var dimension : Button       = $"2D3D"
-
+onready var logLbl    : Label        = $Log
+onready var debugLbl  : Label        = $Debug
 
 # STATE
 var target # either a mesh or color rect depending on mode
@@ -38,7 +39,8 @@ var hot_load_shader = true
 var update_delta = 0.0
 var save_delta = 0.0
 var meshIndex = 0
-var meshArray = []
+var meshes = []
+var lastLog
 
 
 func _ready():
@@ -48,10 +50,10 @@ func _ready():
 	Util.copy_recursive(res_shader_dir, user_shader_dir)
 	Util.copy_recursive("res://mesh/", "user://mesh/")
 	
-	# Get everything from the user/mesh dir and load it into the meshArray
+	# Get everything from the user/mesh dir and load it into the meshes
 	var mesh_files = Util.load_files("user://mesh/")
 	for mesh_file in mesh_files:
-		meshArray.append(load("user://mesh/"+mesh_file))
+		meshes.append(load("user://mesh/"+mesh_file))
 	
 	# set the current shader path to the new or existing user path now
 	current_shader_path = target.shader.get_path().replace('res://', 'user://')
@@ -90,6 +92,11 @@ func _copy_editor_shader_code():
 	if textEdit.text == "": return
 	if !hot_load_shader: return
 	target.shader.set_code(textEdit.text)
+	_set_last_log()
+	logLbl.text = lastLog
+	if "null" in lastLog:
+		# hacky as heck, but works to show debug log in editor and clear once its working
+		print('                                                                                    ')
 
 
 func _save_shader():
@@ -97,7 +104,7 @@ func _save_shader():
 	var shader_to_save = target.shader
 	var _e = ResourceSaver.save(current_shader_path, shader_to_save)
 	if _e != OK:
-		print('ERROR: Failed to save shader')
+		debugLbl.text = 'ERROR: Failed to save shader'
 
 
 ## GUI CALLBACKS
@@ -115,11 +122,11 @@ func _on_ImportImg_pressed():
 
 
 func _on_SwitchMesh_pressed():
-	var sz = meshArray.size()
+	var sz = meshes.size()
 	meshIndex += 1
 	if meshIndex >= sz:
 		meshIndex = 0
-	meshInst.set_mesh(meshArray[meshIndex])
+	meshInst.set_mesh(meshes[meshIndex])
 
 
 func _on_CodeToggle_toggled(_button_pressed):
@@ -136,7 +143,7 @@ func _on_Reset_pressed():
 	var resource_version = current_shader_path.replace('user://', 'res://')
 	var resource_shader = load(resource_version)
 	if not resource_shader or resource_shader.code == "":
-		print('ERROR: Could not find original resource shader')
+		debugLbl.text = 'ERROR: Could not find original resource shader'
 		return
 	textEdit.text = resource_shader.code
 	target.shader.set_code(resource_shader.code)
@@ -159,7 +166,7 @@ func _on_FileDialog_file_selected(path):
 	current_shader_path = path
 	var shader = load(current_shader_path)
 	if not shader or not shader is Shader:
-		print('ERROR: Failed to load shader')
+		debugLbl.text = 'ERROR: Failed to load shader'
 		return
 	textEdit.text = shader.code
 	target.set_shader(shader)
@@ -169,7 +176,7 @@ func _on_ImgDialog_file_selected(path):
 	var image = Image.new()
 	var error = image.load(path)
 	if error != OK:
-		print('ERROR: Failed loading image')
+		debugLbl.text = 'ERROR: Failed loading image'
 		return
 	var texture = ImageTexture.new()
 	texture.create_from_image(image)
@@ -184,12 +191,12 @@ func _on_MeshDialog_file_selected(path):
 	meshName = meshName.rsplit(".obj")[0]
 	var _e = ResourceSaver.save("user://mesh/"+meshName+".mesh", newMesh)
 	if _e != OK:
-		print('ERROR: Failed to save mesh')
+		debugLbl.text = 'ERROR: Failed to save mesh'
 		return
 	if newMesh:
-		meshArray.append(newMesh)
+		meshes.append(newMesh)
 	meshInst.set_mesh(newMesh)
-	meshIndex = meshArray.size() - 1
+	meshIndex = meshes.size() - 1
 
 
 func _on_2D3D_button_up():
@@ -229,3 +236,19 @@ func _on_2D3D_button_up():
 	textEdit.text = target.shader.code
 	self.set_process(true)
 
+func _set_last_log():
+	var file = File.new()
+	file.open("user://logs/godot.log", File.READ)
+	file.seek_end(-100)
+	lastLog = ""
+	lastLog += file.get_line()
+	lastLog += file.get_line()
+	file.close()
+	if not "null" in lastLog:
+		var f = File.new()
+		f.open("user://logs/godot.log", File.WRITE)
+		f.store_string(" ")
+		f.close()
+		lastLog = ""
+		# hacky as hell but clears the log so we can clear it with this method...
+	file.close()

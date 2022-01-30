@@ -72,3 +72,4 @@ If using an external text editor, this application should be closed first.
 - Added mesh swapping in 3D
 - Added import of meshes via .obj files
 - Added image support via `uniform sampler2D texture;` (2D and 3D)
+- Added Debug and Logging Labels
