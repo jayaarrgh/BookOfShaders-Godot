@@ -69,7 +69,15 @@ If using an external text editor, this application should be closed first.
 - Used Godot 3.4 (from 3.2 in v1)
 - *.shader were renamed *.gdshader
 ### v3
-- Added mesh swapping in 3D
-- Added import of meshes via .obj files
-- Added image support via `uniform sampler2D texture;` (2D and 3D)
-- Added Debug and Logging Labels
+- Add
+  - import obj as mesh and save to user dir
+  - swapping mesh between cube, sphere, suzanne, utah teapot and user imported meshes
+  - import images as texture pushed to the shader via `uniform sampler2D texture;` (2D and 3D)
+  - more controls to the 3d camera 
+    - shift middle click and drag to move camera
+    - scroll wheel zoom in/out
+  - auto loading can be turned off (useful in 3d mode where it causes stuttering in the render)
+  - stdout/stderr are read from log file and set on a label if there are shader errors - no more need for a terminal output window!
+- FIX
+  - saving new shaders
+  - resetting default shaders 
