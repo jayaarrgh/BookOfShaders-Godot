@@ -23,8 +23,8 @@ onready var main3d    : Spatial      = $"../3D"
 onready var meshInst  : MeshInstance = $"../3D/MeshInstance"
 onready var meshMat   : Material     = $"../3D/MeshInstance".get_surface_material(0)
 onready var dimension : Button       = $"2D3D"
-onready var logLbl    : Label        = $Log
-onready var debugLbl  : Label        = $Debug
+onready var logLbl    : Label        = $TextEdit/Log
+onready var debugLbl  : Label        = $TextEdit/Debug
 
 # STATE
 var target # either a mesh or color rect depending on mode
@@ -48,10 +48,12 @@ func _ready():
 	target = rectMat
 	# res is not editable outside of editor - move res shaders to user directory
 	Util.copy_recursive(res_shader_dir, user_shader_dir)
-	Util.copy_recursive("res://mesh/", "user://mesh/")
+	# overwrite the 3d shader files as there are plans to add more in the future
+	Util.copy_recursive(res_shader_dir+"/3D", user_shader_dir+"/3D", true)
+	Util.copy_recursive("res://mesh", "user://mesh")
 	
 	# Get everything from the user/mesh dir and load it into the meshes
-	var mesh_files = Util.load_files("user://mesh/")
+	var mesh_files = Util.get_files("user://mesh")
 	for mesh_file in mesh_files:
 		meshes.append(load("user://mesh/"+mesh_file))
 	

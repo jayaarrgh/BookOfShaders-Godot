@@ -3,13 +3,13 @@ extends Object
 
 
 # Thanks to https://www.davidepesce.com/2019/11/04/essential-guide-to-godot-filesystem-api/
-static func copy_recursive(from, to):
+static func copy_recursive(from, to, overwrite=false):
 	var directory = Directory.new()
 	
 	# create target directory, if nonexistent
-	if directory.dir_exists(to): return
-	
-	directory.make_dir_recursive(to)
+	if not directory.dir_exists(to): 
+		directory.make_dir_recursive(to)
+#		return
 	
 	# Open directory
 	var error = directory.open(from)
@@ -18,16 +18,22 @@ static func copy_recursive(from, to):
 		directory.list_dir_begin(true)
 		var file_name = directory.get_next()
 		while file_name != "":
+			
 			if directory.current_is_dir():
 				copy_recursive(from + "/" + file_name, to + "/" + file_name)
 			else:
+				if !overwrite:
+					var f = File.new()
+					if f.file_exists(to+"/"+file_name): 
+						file_name = directory.get_next()
+						continue
 				directory.copy(from + "/" + file_name, to + "/" + file_name)
 			file_name = directory.get_next()
 	else:
 		print("Error copying " + from + " to " + to)
 
 
-static func load_files(from):
+static func get_files(from):
 	var directory = Directory.new()
 	var files = []
 	# Open directory
