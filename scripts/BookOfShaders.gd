@@ -15,7 +15,7 @@ const SAVE_SHADER_2D     : float = 2.0 # save every 2 seconds
 const UPDATE_SHADER_3D   : float = 1.0 # update shader every 1s
 const SAVE_SHADER_3D     : float = 3.0 # save every 3s
 
-
+# SCENE DEPENDENCIES
 onready var textEdit  : TextEdit     = $TextEdit
 onready var colorRect : ColorRect    = $ColorRect
 onready var rectMat   : Material     = colorRect.material
@@ -72,12 +72,10 @@ func _ready():
 	$FileDialog.popup()
 	main3d.hide()
 
-
 func _input(event):
 	if event is InputEventMouseMotion:
 		# send mouse movement to the shader - even if the shader doesn't have the param
 		target.set_shader_param('mouse_position', get_local_mouse_position())
-
 
 func _process(delta):
 	update_delta += delta
@@ -89,7 +87,6 @@ func _process(delta):
 		save_delta = float()
 		_save_shader()
 
-
 func _copy_editor_shader_code():
 	if textEdit.text == "": return
 	if !hot_load_shader: return
@@ -100,7 +97,6 @@ func _copy_editor_shader_code():
 		# hacky, but works to show debug log in editor and clear once shader is working
 		print('                                                                                    ')
 
-
 func _save_shader():
 	# TODO: ? allow user to choose whether autosave happens?
 	var shader_to_save = target.shader
@@ -110,7 +106,6 @@ func _save_shader():
 	if _e != OK:
 		debugLbl.text = 'ERROR: Failed to save shader'
 		return
-
 
 func _set_last_log():
 	var file = File.new()
@@ -127,7 +122,6 @@ func _set_last_log():
 		f.close()
 		lastLog = ""
 
-
 #### GUI CALLBACKS
 
 func _on_NewShader_pressed():
@@ -142,7 +136,6 @@ func _on_ImportMesh_pressed():
 func _on_ImportImg_pressed():
 	$ImgDialog.popup()
 
-
 func _on_SwitchMesh_pressed():
 	var sz = meshes.size()
 	meshIndex += 1
@@ -150,15 +143,12 @@ func _on_SwitchMesh_pressed():
 		meshIndex = 0
 	meshInst.set_mesh(meshes[meshIndex])
 
-
 func _on_CodeToggle_toggled(_button_pressed):
 	if textEdit.is_visible_in_tree(): textEdit.hide()
 	else: textEdit.show()
 
-
 func _on_AutoLoadToggle_toggled(value):
 	hot_load_shader = value
-
 
 func _on_Reset_pressed():
 	# overwrite user data with res version
@@ -172,7 +162,6 @@ func _on_Reset_pressed():
 	target.shader.set_code(resource_shader.code)
 	_save_shader()
 
-
 func _on_NewShaderDialog_file_selected(path):
 	# create new shader
 	if not (path.ends_with('.gdshader') or path.ends_with('.shader')): return
@@ -182,7 +171,6 @@ func _on_NewShaderDialog_file_selected(path):
 	textEdit.text = shader_template
 	target.set_shader(new_shader)
 	_save_shader()
-
 
 func _on_FileDialog_file_selected(path):
 	# load the selected shader
@@ -194,7 +182,6 @@ func _on_FileDialog_file_selected(path):
 	debugLbl.text = ""
 	textEdit.text = shader.code
 	target.set_shader(shader)
-
 
 func _on_ImgDialog_file_selected(path):
 	var image = Image.new()
@@ -209,7 +196,6 @@ func _on_ImgDialog_file_selected(path):
 #	TODO: save texture to user dir?? will the image be part of the texture??
 	target.set_shader_param("texture", texture)
 
-
 func _on_MeshDialog_file_selected(path):
 	var newMesh = ObjParse.parse_obj(path) # only grab one mesh, one surface
 	var meshName = path.rsplit("/")[-1]
@@ -223,7 +209,6 @@ func _on_MeshDialog_file_selected(path):
 		meshes.append(newMesh)
 	meshInst.set_mesh(newMesh)
 	meshIndex = meshes.size() - 1
-
 
 func _on_2D3D_button_up():
 	# switches from 2d to 3d mode
