@@ -7,11 +7,11 @@ const SHADER_TEMPLATE_2D : String = "shader_type canvas_item;\n\nuniform sampler
 const RES_SHADER_DIR_3D  : String = "res://shaders/3D/"
 const USER_SHADER_DIR_3D : String = "user://shaders/3D/"
 const SHADER_TEMPLATE_3D : String = "shader_type spatial;\nrender_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;\n\nuniform sampler2D texture;\nuniform vec2 mouse_position;\n\nvarying smooth vec3 our_color;\n//varying flat vec3 our_color;\n\nvoid vertex() {\n	our_color = VERTEX;\n}\n\nvoid fragment() {\n	vec3 base = texture(texture, UV).rgb;\n	ALBEDO = mix(base, our_color.rgb, 0.5);\n}\n\n"
-const UPDATE_SHADER_2D_TIME   : float = 0.2 # update shader every 200ms
-const SAVE_SHADER_2D_TIME     : float = 2.0 # save every 2 seconds
+const UPDATE_SHADER_2D_TIME   : float = 0.2
+const SAVE_SHADER_2D_TIME     : float = 2.0
 # update in 3d is a bit slower at Godot stutters when loading 3d shaders 
-const UPDATE_SHADER_3D_TIME   : float = 1.0 # update shader every 1s
-const SAVE_SHADER_3D_TIME     : float = 2.0 # save every 3s
+const UPDATE_SHADER_3D_TIME   : float = 1.0
+const SAVE_SHADER_3D_TIME     : float = 2.0
 
 #### SCENE DEPENDENCIES
 onready var textEdit  : TextEdit     = $TextEdit
@@ -83,6 +83,7 @@ func _process(delta):
 		_save_shader()
 
 func _save_shader():
+	if !should_update_shader: return
 	var shader_to_save = target.shader
 	var err = ResourceSaver.save(current_shader_path, shader_to_save)
 	if err != OK:
@@ -121,6 +122,7 @@ func _on_TextEdit_text_changed():
 
 func _on_stop_load_timer():
 	_copy_editor_shader_code()
+	_save_shader()
 	should_update_shader = false
 
 #### GUI CALLBACKS
