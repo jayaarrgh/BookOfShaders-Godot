@@ -11,7 +11,7 @@ const UPDATE_SHADER_2D_TIME   : float = 0.2 # update shader every 200ms
 const SAVE_SHADER_2D_TIME     : float = 2.0 # save every 2 seconds
 # update in 3d is a bit slower at Godot stutters when loading 3d shaders 
 const UPDATE_SHADER_3D_TIME   : float = 1.0 # update shader every 1s
-const SAVE_SHADER_3D_TIME     : float = 3.0 # save every 3s
+const SAVE_SHADER_3D_TIME     : float = 2.0 # save every 3s
 
 #### SCENE DEPENDENCIES
 onready var textEdit  : TextEdit     = $TextEdit
@@ -84,8 +84,8 @@ func _process(delta):
 
 func _save_shader():
 	var shader_to_save = target.shader
-	var _e = ResourceSaver.save(current_shader_path, shader_to_save)
-	if _e != OK:
+	var err = ResourceSaver.save(current_shader_path, shader_to_save)
+	if err != OK:
 		debugLbl.text = 'ERROR: Failed to save shader'
 		return
 
@@ -98,8 +98,7 @@ func _copy_editor_shader_code():
 	if not "         " in lastLog:
 		print('                                                                                    ')
 
-### ERROR "display"
-
+#### ERROR "display"
 func _set_last_log():
 	var file = File.new()
 	file.open("user://logs/godot.log", File.READ)
@@ -115,8 +114,7 @@ func _set_last_log():
 		f.close()
 		lastLog = ""
 
-#### SWAP Timeout
-
+#### SWAP TIMEOUT
 func _on_TextEdit_text_changed():
 	should_update_shader = true
 	stopTimer.start()
@@ -126,7 +124,6 @@ func _on_stop_load_timer():
 	should_update_shader = false
 
 #### GUI CALLBACKS
-
 func _on_NewShader_pressed():
 	$NewShaderDialog.popup()
 
@@ -185,8 +182,8 @@ func _on_FileDialog_file_selected(path):
 
 func _on_ImgDialog_file_selected(path):
 	var image = Image.new()
-	var error = image.load(path)
-	if error != OK:
+	var err = image.load(path)
+	if err != OK:
 		debugLbl.text = 'ERROR: Failed loading image'
 		return
 	debugLbl.text = ""
@@ -199,8 +196,8 @@ func _on_MeshDialog_file_selected(path):
 	var newMesh = ObjParse.parse_obj(path) # only grab one mesh, one surface
 	var meshName = path.rsplit("/")[-1]
 	meshName = meshName.rsplit(".obj")[0]
-	var _e = ResourceSaver.save("user://mesh/"+meshName+".mesh", newMesh)
-	if _e != OK:
+	var err = ResourceSaver.save("user://mesh/"+meshName+".mesh", newMesh)
+	if err != OK:
 		debugLbl.text = 'ERROR: Failed to save mesh'
 		return
 	debugLbl.text = ""
