@@ -43,7 +43,7 @@ var lastLog = ""
 
 
 func _ready():
-	stopTimer.connect("timeout", self, '_on_stop_load_timer')
+	var _e = stopTimer.connect("timeout", self, '_on_stop_load_timer')
 	dimension.text = "3D"
 	# res is not editable outside of editor - move res shaders to user directory
 	Util.copy_recursive(res_shader_dir, user_shader_dir)

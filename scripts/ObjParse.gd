@@ -23,9 +23,9 @@ static func parse_obj(obj_path):
 	var normals = PoolVector3Array()
 	var uvs = PoolVector2Array()
 	var faces = {}
-	var fans = []
+#	var fans = []
 
-	var firstSurface = true
+#	var firstSurface = true
 	var mat_name = null
 
 	# Parse
