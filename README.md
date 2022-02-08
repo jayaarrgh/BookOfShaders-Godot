@@ -34,7 +34,7 @@ Run the Main.tscn. Use the file dialog to switch shaders.
 
 
 ## Tips on Use
-- The hideable text editor swaps the shader code every 200 ms, and saves the file every 3000ms.
+- The hideable text editor swaps the shader code every 200 ms while editing, and saves the file every 3000ms.
 It does this less often in the 3D section, as saving and swaping shaders in 3d causes slight pauses in the renderer.
 
 - Create new folders and new shader code in the `user://shaders` and `user://shaders/3D` directories.
