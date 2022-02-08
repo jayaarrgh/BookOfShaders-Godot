@@ -1,21 +1,19 @@
 extends Control
 
 
-# TODO: only swap 3d shader and save code when changes have been made to TextEdit 
-
 const RES_SHADER_DIR_2D  : String = "res://shaders"
 const USER_SHADER_DIR_2D : String = "user://shaders"
 const SHADER_TEMPLATE_2D : String = "shader_type canvas_item;\n\nuniform sampler2D texture;\nuniform vec2 mouse_position;\nvoid fragment(){\n\tCOLOR = vec4(vec3(0.0,0.5,0.3), 1.);\n}"
 const RES_SHADER_DIR_3D  : String = "res://shaders/3D/"
 const USER_SHADER_DIR_3D : String = "user://shaders/3D/"
 const SHADER_TEMPLATE_3D : String = "shader_type spatial;\nrender_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;\n\nuniform sampler2D texture;\nuniform vec2 mouse_position;\n\nvarying smooth vec3 our_color;\n//varying flat vec3 our_color;\n\nvoid vertex() {\n	our_color = VERTEX;\n}\n\nvoid fragment() {\n	vec3 base = texture(texture, UV).rgb;\n	ALBEDO = mix(base, our_color.rgb, 0.5);\n}\n\n"
-const UPDATE_SHADER_2D   : float = 0.2 # update shader every 200ms
-const SAVE_SHADER_2D     : float = 2.0 # save every 2 seconds
+const UPDATE_SHADER_2D_TIME   : float = 0.2 # update shader every 200ms
+const SAVE_SHADER_2D_TIME     : float = 2.0 # save every 2 seconds
 # update in 3d is a bit slower at Godot stutters when loading 3d shaders 
-const UPDATE_SHADER_3D   : float = 1.0 # update shader every 1s
-const SAVE_SHADER_3D     : float = 3.0 # save every 3s
+const UPDATE_SHADER_3D_TIME   : float = 1.0 # update shader every 1s
+const SAVE_SHADER_3D_TIME     : float = 3.0 # save every 3s
 
-# SCENE DEPENDENCIES
+#### SCENE DEPENDENCIES
 onready var textEdit  : TextEdit     = $TextEdit
 onready var colorRect : ColorRect    = $ColorRect
 onready var rectMat   : Material     = colorRect.material
@@ -25,27 +23,28 @@ onready var meshMat   : Material     = $"../3D/MeshInstance".get_surface_materia
 onready var dimension : Button       = $"2D3D"
 onready var logLbl    : Label        = $Log
 onready var debugLbl  : Label        = $Debug
+onready var stopTimer : Timer        = $StopLoadTimer
 
-# STATE
-var target # either a mesh or color rect depending on mode
+##### STATE
 var mode2d = true
+var target = rectMat # either a mesh or color rect mat depending on mode2d
 var res_shader_dir = RES_SHADER_DIR_2D
 var user_shader_dir = USER_SHADER_DIR_2D
 var shader_template = SHADER_TEMPLATE_2D
-var current_shader_path
-var update_shader
-var save_shader
-var hot_load_shader = true
+var current_shader_path = ""
+var should_update_shader = false
+var update_shader = UPDATE_SHADER_2D_TIME
+var save_shader = SAVE_SHADER_2D_TIME
 var update_delta = 0.0
 var save_delta = 0.0
 var meshIndex = 0
 var meshes = []
-var lastLog
+var lastLog = ""
 
 
 func _ready():
+	stopTimer.connect("timeout", self, '_on_stop_load_timer')
 	dimension.text = "3D"
-	target = rectMat
 	# res is not editable outside of editor - move res shaders to user directory
 	Util.copy_recursive(res_shader_dir, user_shader_dir)
 	# overwrite the 3d shader files as there are plans to add more in the future
@@ -61,9 +60,6 @@ func _ready():
 	current_shader_path = target.shader.get_path().replace('res://', 'user://')
 	target.shader = load(current_shader_path)
 	textEdit.text = target.shader.code
-	update_shader = UPDATE_SHADER_2D
-	save_shader = SAVE_SHADER_2D
-	shader_template = SHADER_TEMPLATE_2D
 	# pop up FileDialog on start, use user dir
 	$FileDialog.current_dir = user_shader_dir
 	$FileDialog.current_path = user_shader_dir
@@ -74,7 +70,6 @@ func _ready():
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		# send mouse movement to the shader - even if the shader doesn't have the param
 		target.set_shader_param('mouse_position', get_local_mouse_position())
 
 func _process(delta):
@@ -87,26 +82,23 @@ func _process(delta):
 		save_delta = float()
 		_save_shader()
 
-func _copy_editor_shader_code():
-	if textEdit.text == "": return
-	if !hot_load_shader: return
-	target.shader.set_code(textEdit.text)
-	_set_last_log()
-	logLbl.text = lastLog
-	if "null" in lastLog:
-		# why check substring "null"? it always apears in my tests of shader errors
-		# print hack, clear log once shader is working
-		print('                                                                                    ')
-
 func _save_shader():
-	# TODO: ? allow user to choose whether autosave happens?
 	var shader_to_save = target.shader
 	var _e = ResourceSaver.save(current_shader_path, shader_to_save)
-	# Not clearing debug label here as this is called too often - you may otherwise miss an errror 
-#	debugLbl.text = ""
 	if _e != OK:
 		debugLbl.text = 'ERROR: Failed to save shader'
 		return
+
+func _copy_editor_shader_code():
+	if textEdit.text == "": return
+	if !should_update_shader: return
+	target.shader.set_code(textEdit.text)
+	_set_last_log()
+	logLbl.text = lastLog
+	if not "         " in lastLog:
+		print('                                                                                    ')
+
+### ERROR "display"
 
 func _set_last_log():
 	var file = File.new()
@@ -116,12 +108,22 @@ func _set_last_log():
 	lastLog += file.get_line()
 	lastLog += file.get_line()
 	file.close()
-	if not "null" in lastLog:
+	if "         " in lastLog:
 		var f = File.new()
 		f.open("user://logs/godot.log", File.WRITE)
-		f.store_string(" ")
+		f.store_string("         ")
 		f.close()
 		lastLog = ""
+
+#### SWAP Timeout
+
+func _on_TextEdit_text_changed():
+	should_update_shader = true
+	stopTimer.start()
+
+func _on_stop_load_timer():
+	_copy_editor_shader_code()
+	should_update_shader = false
 
 #### GUI CALLBACKS
 
@@ -147,9 +149,6 @@ func _on_SwitchMesh_pressed():
 func _on_CodeToggle_toggled(_button_pressed):
 	if textEdit.is_visible_in_tree(): textEdit.hide()
 	else: textEdit.show()
-
-func _on_AutoLoadToggle_toggled(value):
-	hot_load_shader = value
 
 func _on_Reset_pressed():
 	# overwrite user data with res version
@@ -194,7 +193,6 @@ func _on_ImgDialog_file_selected(path):
 	var texture = ImageTexture.new()
 	texture.create_from_image(image)
 #	name = path.rsplit('/')[-1].rsplit('.')[0]
-#	TODO: save texture to user dir?? will the image be part of the texture??
 	target.set_shader_param("texture", texture)
 
 func _on_MeshDialog_file_selected(path):
@@ -219,8 +217,8 @@ func _on_2D3D_button_up():
 		dimension.text = "3D"
 		target = rectMat
 		shader_template = SHADER_TEMPLATE_2D
-		update_shader = UPDATE_SHADER_2D
-		save_shader = SAVE_SHADER_2D
+		update_shader = UPDATE_SHADER_2D_TIME
+		save_shader = SAVE_SHADER_2D_TIME
 		user_shader_dir = USER_SHADER_DIR_2D
 		colorRect.show()
 		main3d.hide()
@@ -230,8 +228,8 @@ func _on_2D3D_button_up():
 		dimension.text = "2D"
 		target = meshMat
 		shader_template = SHADER_TEMPLATE_3D
-		update_shader = UPDATE_SHADER_3D
-		save_shader = SAVE_SHADER_3D
+		update_shader = UPDATE_SHADER_3D_TIME
+		save_shader = SAVE_SHADER_3D_TIME
 		user_shader_dir = USER_SHADER_DIR_3D
 		main3d.show()
 		colorRect.hide()
