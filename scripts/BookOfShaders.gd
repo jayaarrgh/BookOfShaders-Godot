@@ -53,6 +53,7 @@ func _ready():
 		meshes.append(load("user://mesh/"+mesh_file))
 	
 	# set the current shader path to the new or existing user path now
+	target = rectMat
 	currentShaderPath = target.shader.get_path().replace('res://', 'user://')
 	target.shader = load(currentShaderPath)
 	textEdit.text = target.shader.code
