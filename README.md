@@ -76,7 +76,7 @@ If using an external text editor, this application should be closed first.
   - more controls to the 3d camera 
     - shift middle click and drag to move camera
     - scroll wheel zoom in/out
-  - auto loading can be turned off (useful in 3d mode where it causes stuttering in the render)
+  - auto swaping now only occurs when editing text (fixing the endless stuttering in 3d mode)
   - stdout/stderr are read from log file and set on a label if there are shader errors - no more need for a terminal output window!
 - FIX
   - saving new shaders
