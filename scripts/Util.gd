@@ -3,13 +3,13 @@ extends Object
 
 
 # Thanks to https://www.davidepesce.com/2019/11/04/essential-guide-to-godot-filesystem-api/
-static func copy_recursive(from, to):
+static func copy_recursive(from, to, overwrite=false):
 	var directory = Directory.new()
 	
 	# create target directory, if nonexistent
-	if directory.dir_exists(to): return
-	
-	directory.make_dir_recursive(to)
+	if not directory.dir_exists(to): 
+		directory.make_dir_recursive(to)
+#		return
 	
 	# Open directory
 	var error = directory.open(from)
@@ -18,29 +18,50 @@ static func copy_recursive(from, to):
 		directory.list_dir_begin(true)
 		var file_name = directory.get_next()
 		while file_name != "":
+			
 			if directory.current_is_dir():
 				copy_recursive(from + "/" + file_name, to + "/" + file_name)
 			else:
+				if !overwrite:
+					var f = File.new()
+					if f.file_exists(to+"/"+file_name): 
+						file_name = directory.get_next()
+						continue
 				directory.copy(from + "/" + file_name, to + "/" + file_name)
 			file_name = directory.get_next()
 	else:
 		print("Error copying " + from + " to " + to)
 
 
-# unused directory helpers
+static func get_files(from):
+	var directory = Directory.new()
+	var files = []
+	# Open directory
+	var error = directory.open(from)
+	if error == OK:
+		# List directory content
+		directory.list_dir_begin(true)
+		var file_name = directory.get_next()
+		while file_name != "":
+			files.append(file_name)
+			file_name = directory.get_next()
+	else:
+		print("Error reading from " + from)
+	return files
 
+#### unused directory helpers
 
-#func recursive_dirs_and_files_dict(dir, data):
+#static func recursive_dirs_and_files_dict(dir, data):
 #	var file_name = dir.get_next()
-##
+#
 #	while (file_name != ""):
 #		var path = dir.get_current_dir() + "/" + file_name
-#		var _user_path = path.replace('res://', 'user://')
+##		var _user_path = path.replace('res://', 'user://')
 #		if dir.current_is_dir():
 ##			print("Found directory: %s" % path)
 #			var subDir = Directory.new()
 #			subDir.open(path)
-#			subDir.list_dir_begin(true, false)
+#			subDir.list_dir_begin(true, true)
 #			data[path] = []
 #			recursive_dirs_and_files_dict(subDir, data)
 #		else:
@@ -54,11 +75,11 @@ static func copy_recursive(from, to):
 #	return data
 #
 #
-#func get_dirs_and_files_dict():
+#static func get_dirs_and_files_dict(path):
 #	var dir = Directory.new()
 #	var data = {}
-#	if dir.open(shaders_dir) == OK:
-#		dir.list_dir_begin(true, false)
+#	if dir.open(path) == OK:
+#		dir.list_dir_begin(true, true)
 #		data = recursive_dirs_and_files_dict(dir, data)
 #	return data
 #

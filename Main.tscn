@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scripts/BookOfShaders.gd" type="Script" id=1]
 [ext_resource path="res://scripts/TextEdit.gd" type="Script" id=2]
@@ -7,11 +7,11 @@
 [ext_resource path="res://DarkTheme.tres" type="Theme" id=5]
 [ext_resource path="res://shaders/3D/3DTest.gdshader" type="Shader" id=6]
 [ext_resource path="res://scripts/Camera.gd" type="Script" id=7]
-
-[sub_resource type="CubeMesh" id=3]
+[ext_resource path="res://mesh/cube.tres" type="CubeMesh" id=8]
 
 [sub_resource type="ShaderMaterial" id=8]
 shader = ExtResource( 6 )
+shader_param/mouse_position = null
 
 [sub_resource type="ProceduralSky" id=6]
 
@@ -33,16 +33,19 @@ extra_spacing_bottom = -2
 extra_spacing_space = -1
 font_data = ExtResource( 3 )
 
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 0, 0, 0, 0.615686 )
+
 [node name="Main" type="Node"]
 
 [node name="3D" type="Spatial" parent="."]
 
 [node name="MeshInstance" type="MeshInstance" parent="3D"]
-mesh = SubResource( 3 )
+mesh = ExtResource( 8 )
 material/0 = SubResource( 8 )
 
 [node name="GimbleY" type="Spatial" parent="3D"]
-transform = Transform( 0.607431, 0, 0.794372, 0, 1, 0, -0.794372, 0, 0.607431, 0, 0, 0 )
+transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 0, 0, 0 )
 script = ExtResource( 7 )
 
 [node name="GimbleX" type="Spatial" parent="3D/GimbleY"]
@@ -58,6 +61,7 @@ environment = SubResource( 7 )
 [node name="UI" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -150,6 +154,49 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="2D3D" type="Button" parent="UI"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -365.0
+margin_top = 4.0
+margin_right = -331.0
+margin_bottom = 26.0
+theme = ExtResource( 5 )
+shortcut_in_tooltip = false
+text = "2D"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Reset" type="Button" parent="UI"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -328.0
+margin_top = 4.0
+margin_right = -280.0
+margin_bottom = 26.0
+theme = ExtResource( 5 )
+text = "Reset"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CodeToggle" type="Button" parent="UI"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -277.0
+margin_top = 4.19305
+margin_right = -198.0
+margin_bottom = 26.1931
+theme = ExtResource( 5 )
+toggle_mode = true
+shortcut_in_tooltip = false
+pressed = true
+text = "Edit Code"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="SwitchShader" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
@@ -163,58 +210,56 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CodeToggle" type="Button" parent="UI"]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -188.917
-margin_top = 4.19305
-margin_right = -109.917
-margin_bottom = 26.1931
-theme = ExtResource( 5 )
-toggle_mode = true
-shortcut_in_tooltip = false
-pressed = true
-text = "Edit Code"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Reset" type="Button" parent="UI"]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -241.921
-margin_top = 4.3079
-margin_right = -193.921
-margin_bottom = 26.3079
-theme = ExtResource( 5 )
-text = "Reset"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="NewShader" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -333.808
-margin_top = 3.99564
-margin_right = -246.808
-margin_bottom = 25.9956
+margin_left = -195.0
+margin_top = 4.0
+margin_right = -108.0
+margin_bottom = 26.0
 theme = ExtResource( 5 )
 text = "New Shader"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="2D3D" type="Button" parent="UI"]
+[node name="ImportImg" type="Button" parent="UI"]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -374.0
-margin_top = 4.0
-margin_right = -340.0
-margin_bottom = 26.0
+margin_left = -105.0
+margin_top = 29.0
+margin_right = -5.0
+margin_bottom = 51.0
 theme = ExtResource( 5 )
-shortcut_in_tooltip = false
-text = "2D"
+text = "Import Img"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SwitchMesh" type="Button" parent="UI"]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -105.0
+margin_top = 54.0
+margin_right = -5.0
+margin_bottom = 76.0
+theme = ExtResource( 5 )
+text = "Switch Mesh"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ImportMesh" type="Button" parent="UI"]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -105.0
+margin_top = 79.0
+margin_right = -5.0
+margin_bottom = 101.0
+theme = ExtResource( 5 )
+text = "Import Mesh"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -232,9 +277,8 @@ mode_overrides_title = false
 mode = 0
 access = 1
 filters = PoolStringArray( "*.gdshader", "*.shader" )
-show_hidden_files = true
-current_dir = "user://media/jr/Mnemonic Courier/godot/_src/BookOfShaders-Godot"
-current_path = "user://media/jr/Mnemonic Courier/godot/_src/BookOfShaders-Godot/"
+current_dir = "user://shaders"
+current_path = "user://shaders/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -250,18 +294,95 @@ theme = ExtResource( 5 )
 window_title = "Create Shader"
 mode_overrides_title = false
 access = 1
-filters = PoolStringArray( "*.gdshader", "*.shader" )
-show_hidden_files = true
+filters = PoolStringArray( "*.gdshader" )
 current_dir = "user://shaders"
 current_path = "user://shaders/"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="pressed" from="UI/SwitchShader" to="UI" method="_on_SwitchShader_pressed"]
-[connection signal="toggled" from="UI/CodeToggle" to="UI" method="_on_CodeToggle_toggled"]
-[connection signal="pressed" from="UI/Reset" to="UI" method="_on_Reset_pressed"]
-[connection signal="pressed" from="UI/NewShader" to="UI" method="_on_NewShader_pressed"]
+[node name="MeshDialog" type="FileDialog" parent="UI"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -349.802
+margin_top = 55.7754
+margin_right = -6.80188
+margin_bottom = 466.775
+theme = ExtResource( 5 )
+window_title = "Import Obj"
+mode_overrides_title = false
+mode = 0
+access = 2
+filters = PoolStringArray( "*.obj" )
+current_dir = "/"
+current_path = "/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ImgDialog" type="FileDialog" parent="UI"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -349.802
+margin_top = 55.7754
+margin_right = -6.80188
+margin_bottom = 466.775
+theme = ExtResource( 5 )
+window_title = "Import Img"
+mode_overrides_title = false
+mode = 0
+access = 2
+filters = PoolStringArray( "*.png", "*.jpg", "*.jpeg", "*.bmp" )
+current_dir = "/"
+current_path = "/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Debug" type="Label" parent="UI"]
+anchor_left = 0.513
+anchor_top = 0.942
+anchor_right = 0.987
+anchor_bottom = 0.965
+margin_left = 0.359985
+margin_top = -0.240051
+margin_right = -0.360107
+margin_bottom = 0.199951
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_styles/normal = SubResource( 9 )
+align = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Log" type="Label" parent="UI"]
+anchor_left = 0.513
+anchor_top = 0.969
+anchor_right = 0.987
+anchor_bottom = 0.993
+margin_left = 0.359985
+margin_top = 0.319946
+margin_right = -0.360107
+margin_bottom = 0.039978
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+custom_styles/normal = SubResource( 9 )
+align = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="StopLoadTimer" type="Timer" parent="UI"]
+
+[connection signal="text_changed" from="UI/TextEdit" to="UI" method="_on_TextEdit_text_changed"]
 [connection signal="button_up" from="UI/2D3D" to="UI" method="_on_2D3D_button_up"]
+[connection signal="pressed" from="UI/Reset" to="UI" method="_on_Reset_pressed"]
+[connection signal="toggled" from="UI/CodeToggle" to="UI" method="_on_CodeToggle_toggled"]
+[connection signal="pressed" from="UI/SwitchShader" to="UI" method="_on_SwitchShader_pressed"]
+[connection signal="pressed" from="UI/NewShader" to="UI" method="_on_NewShader_pressed"]
+[connection signal="pressed" from="UI/ImportImg" to="UI" method="_on_ImportImg_pressed"]
+[connection signal="pressed" from="UI/SwitchMesh" to="UI" method="_on_SwitchMesh_pressed"]
+[connection signal="pressed" from="UI/ImportMesh" to="UI" method="_on_ImportMesh_pressed"]
 [connection signal="file_selected" from="UI/FileDialog" to="UI" method="_on_FileDialog_file_selected"]
 [connection signal="file_selected" from="UI/NewShaderDialog" to="UI" method="_on_NewShaderDialog_file_selected"]
+[connection signal="file_selected" from="UI/MeshDialog" to="UI" method="_on_MeshDialog_file_selected"]
+[connection signal="file_selected" from="UI/ImgDialog" to="UI" method="_on_ImgDialog_file_selected"]

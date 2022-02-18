@@ -9,6 +9,8 @@ Now featuring a 3D section for additional learning! Use middle mouse button clic
 
 [Migrate to Godot's Shading Language](https://docs.godotengine.org/en/stable/tutorials/shading/migrating_to_godot_shader_language.html#doc-migrating-to-godot-shader-language)
 
+Thanks to [Ezcha's gd-obj runtime importer](https://github.com/Ezcha/gd-obj)
+
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?business=L4GGSCN5YWVG2&no_recurring=0&item_name=Thanks+for+buying+me+a+coffee%21&currency_code=USD)
 
 ![](.gif/demo.gif)
@@ -32,34 +34,56 @@ Run the Main.tscn. Use the file dialog to switch shaders.
 
 
 ## Tips on Use
-The hideable text editor swaps the shader code every 200 ms, and saves the file every 3000ms.
-It does this less often in the 3D section, as saving and swaping shaders in 3d takes a bit longs and causes slight pauses in the renderer.
+- The hideable text editor swaps the shader code every 200 ms while editing, and saves the file every 3000ms.
+It does this less often in the 3D section, as saving and swaping shaders in 3d causes slight pauses in the renderer.
 
-The 3D section can load 2d canvas shaders with strange results.
-All 3D shaders should go inside the shader folder.
+- Create new folders and new shader code in the `user://shaders` and `user://shaders/3D` directories.
 
-The reset button returns edited shaders to their default code.
+- The reset button returns edited shaders to their default code. This does nothing for your own created shaders.
 
-To reset all shaders to the default shader code, delete the shaders folder in the user directory and reopen the application. Copy any of your changes you want to maintain first of course.
+- All 3D shaders should go inside the shader/3D folder. The 3D section can load 2D canvas shaders with strange results.
 
-Create new folders and new shader code in the user directory.
+- You can use `uniform sampler2D texture;` in your shaders and import an image to use.
+This works in 2D and 3D. The images and textures are not saved between sessions.
 
-*WARNING*: Automatic saving during runtime will overwrite external editor changes.
+- You can import meshes in .obj format. All material and texture information is not kept. This only works with single surface meshes. The mesh data is stored for use between sessions.
+
+- Rotate the 3D camera with middle mouse. Zoom in and out with middle mouse scroll. Shift and middle mouse to translate the camera.
+
+- To reset all shaders to the default shader code, delete the shaders folder in the user directory and reopen the application. This will delete any shaders you have created yourself. So copy any of your  you want to maintain first of course.
+  - *WARNING*: Automatic saving during runtime will overwrite external editor changes.
 If using an external text editor, this application should be closed first.
+  - User Directory
+  
+        Windows:
+            %APPDATA%\Godot\app_userdata\Project Name
 
-
-#### User Directory
-
-    Windows:
-        %APPDATA%\Godot\app_userdata\Project Name
-
-    On GNU/Linux: 
-        $HOME/.godot/app_userdata/Project Name
-        OR
-        $HOME/.local/share/godot/app_userdata/Project Name
+        On GNU/Linux: 
+            $HOME/.godot/app_userdata/Project Name
+            OR
+            $HOME/.local/share/godot/app_userdata/Project Name
 
 ## ChangeLog
 ### v2
 - Added 3d Mode
 - Used Godot 3.4 (from 3.2 in v1)
 - *.shader were renamed *.gdshader
+### v3
+- Add
+  - import obj as mesh and save to user dir
+  - swapping mesh between cube, sphere, suzanne, utah teapot and user imported meshes
+  - import images as texture pushed to the shader via `uniform sampler2D texture;` (2D and 3D)
+  - more controls to the 3d camera 
+    - shift middle click and drag to move camera
+    - scroll wheel zoom in/out
+  - auto swaping now only occurs when editing text (fixing the endless stuttering in 3d mode)
+  - stdout/stderr are read from log file and set on a label if there are shader errors - no more need for a terminal output window!
+- FIX
+  - saving new shaders
+  - resetting default shaders
+
+## Planned Features
+- 3d shader examples
+- More mesh import filetypes
+- swaping shader code only on text edits
+- port to godot 4.0 when its release (with new shader features!!!)
